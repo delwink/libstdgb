@@ -1,5 +1,5 @@
 CC=sdcc -mgbz80
-AR=sdar
+AR=ar
 
 COMPILE=$(CC) $(CFLAGS) -Iinclude -c
 
