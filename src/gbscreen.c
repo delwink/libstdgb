@@ -19,9 +19,9 @@
 #include "gbscreen.h"
 
 void
-gb_set_lcd_mode (uint8_t state)
+gb_set_lcd_mode (uint8_t mode)
 {
-  *GB_LCD = state;
+  *GB_LCD = mode;
 }
 
 void
