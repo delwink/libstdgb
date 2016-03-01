@@ -21,6 +21,9 @@
 #include <stdint.h>
 
 void
-set_lcd_mode (uint8_t mode);
+gb_set_lcd_mode (uint8_t mode);
+
+void
+gb_set_bg_palette (uint8_t palette);
 
 #endif

@@ -19,7 +19,13 @@
 #include "gbscreen.h"
 
 void
-set_lcd_mode (uint8_t state)
+gb_set_lcd_mode (uint8_t state)
 {
-  *LCD = state;
+  *GB_LCD = state;
+}
+
+void
+gb_set_bg_palette (uint8_t palette)
+{
+  *GB_BG_PALETTE = palette;
 }
