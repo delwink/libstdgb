@@ -35,7 +35,7 @@
 #define GB_SCRN1_END       ((uint8_t *) 0x9FFF)
 
 #define GB_RAM             ((uint8_t *) 0xC000)
-#define GB_RAM_END         ((uint8_t *) 0xE000)
+#define GB_RAM_END         ((uint8_t *) 0xDFFF)
 
 #define GB_OAMRAM          ((uint8_t *) 0xFE00)
 #define GB_OAMRAM_END      ((uint8_t *) 0xFE9F)
