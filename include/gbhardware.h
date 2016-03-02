@@ -23,7 +23,10 @@
 /* memory locations */
 
 #define GB_VRAM            ((uint8_t *) 0x8000)
-#define GB_VRAM_END        ((uint8_t *) 0xA000)
+#define GB_VRAM_END        ((uint8_t *) 0x9FFF)
+
+#define GB_TILE_DATA       ((uint8_t *) 0x8000)
+#define GB_TILE_DATA_END   ((uint8_t *) 0x8FFF)
 
 #define GB_SCRN0           ((uint8_t *) 0x9800)
 #define GB_SCRN0_END       ((uint8_t *) 0x9BFF)

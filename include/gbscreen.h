@@ -56,4 +56,10 @@ gb_set_lcd_mode (uint8_t mode);
 void
 gb_set_bg_palette (uint8_t palette);
 
+void
+gb_set_all_tile_data (uint8_t pattern);
+
+void
+gb_set_all_tile_maps (uint8_t tile);
+
 #endif
