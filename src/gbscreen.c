@@ -15,8 +15,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-
 #include "gbhardware.h"
 #include "gbscreen.h"
 
@@ -27,6 +25,16 @@ uint8_t _gb_cursor_y = 0;
 uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
 
 static size_t offset = 0;
+
+void
+gb_define_tile (size_t start, uint8_t *data)
+{
+  uint8_t *tiles = GB_TILE_DATA;
+  size_t i;
+
+  for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
+    tiles[i] = data[i];
+}
 
 void
 gb_inc_cursor ()

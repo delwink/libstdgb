@@ -19,6 +19,8 @@
 #define DELWINK_GBSCREEN_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* LCD flags */
 
@@ -59,16 +61,16 @@
 
 extern uint8_t _gb_char_offset;
 
-#define gb_set_ascii_offset(N) _gb_char_offset = N;
+#define gb_set_ascii_offset(N) _gb_char_offset = (N);
 
 extern uint8_t _gb_cursor_x, _gb_cursor_y;
 
-#define gb_set_cursor(X,Y) _gb_cursor_x = X; _gb_cursor_y = Y;
+#define gb_set_cursor(X,Y) _gb_cursor_x = (X); _gb_cursor_y = (Y);
 
 extern uint8_t _gb_cursor_x_limit, _gb_cursor_y_limit;
 
-#define gb_set_cursor_x_limit(L) _gb_cursor_x_limit = L;
-#define gb_set_cursor_y_limit(L) _gb_cursor_y_limit = L;
+#define gb_set_cursor_x_limit(L) _gb_cursor_x_limit = (L);
+#define gb_set_cursor_y_limit(L) _gb_cursor_y_limit = (L);
 
 void
 gb_inc_cursor (void);
@@ -76,9 +78,11 @@ gb_inc_cursor (void);
 void
 gb_set_view (uint8_t x, uint8_t y);
 
-#define gb_shift_view(X,Y) gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
+#define gb_shift_view(X,Y)				\
+  gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
 
-#define gb_define_tile(I,T) *(GB_TILE_DATA + (I)) = T;
+void
+gb_define_tile (size_t i, uint8_t *tile_data);
 
 void
 gb_puttile (uint8_t tile);
