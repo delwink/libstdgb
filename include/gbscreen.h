@@ -93,10 +93,7 @@ gb_set_lcd_mode (uint8_t mode);
 void
 gb_set_bg_palette (uint8_t palette);
 
-void
-gb_set_all_tile_data (uint8_t pattern);
-
-void
-gb_set_all_tile_maps (uint8_t tile);
+#define gb_set_all_tile_data(P) memset (GB_TILE_DATA, (P), 0x1000);
+#define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x200);
 
 #endif

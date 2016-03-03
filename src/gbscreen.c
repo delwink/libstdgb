@@ -96,21 +96,3 @@ gb_set_bg_palette (uint8_t palette)
 {
   *GB_BG_PALETTE = palette;
 }
-
-void
-gb_set_all_tile_data (uint8_t pattern)
-{
-  uint8_t *p;
-
-  for (p = GB_TILE_DATA; p <= GB_TILE_DATA_END; ++p)
-    *p = pattern;
-}
-
-void
-gb_set_all_tile_maps (uint8_t tile)
-{
-  uint8_t *p;
-
-  for (p = GB_SCRN0; p <= GB_SCRN1_END; ++p)
-    *p = tile;
-}
