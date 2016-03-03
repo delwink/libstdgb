@@ -50,6 +50,39 @@
 #define GB_LCD_VRAM    (0x03)
 #define GB_LCD_BUSY    (0x02)
 
+/* screen facts */
+
+#define GB_LCD_X_SIZE  (160)
+#define GB_LCD_Y_SIZE  (144)
+#define GB_LCD_X_BYTE  (20)
+#define GB_LCD_Y_BYTE  (18)
+
+extern uint8_t _gb_char_offset;
+
+#define gb_set_ascii_offset(N) _gb_char_offset = N;
+
+extern uint8_t _gb_cursor_x, _gb_cursor_y;
+
+#define gb_set_cursor(X,Y) _gb_cursor_x = X; _gb_cursor_y = Y;
+
+extern uint8_t _gb_cursor_x_limit, _gb_cursor_y_limit;
+
+#define gb_set_cursor_x_limit(L) _gb_cursor_x_limit = L;
+#define gb_set_cursor_y_limit(L) _gb_cursor_y_limit = L;
+
+void
+gb_inc_cursor (void);
+
+void
+gb_set_view (uint8_t x, uint8_t y);
+
+#define gb_shift_view(X,Y) gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
+
+#define gb_define_tile(I,T) *(GB_TILE_DATA + (I)) = T;
+
+void
+gb_puttile (uint8_t tile);
+
 void
 gb_set_lcd_mode (uint8_t mode);
 
