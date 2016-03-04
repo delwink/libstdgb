@@ -87,13 +87,11 @@ gb_define_tile (size_t i, uint8_t *tile_data);
 void
 gb_puttile (uint8_t tile);
 
-void
-gb_set_lcd_mode (uint8_t mode);
+#define gb_set_lcd_mode(M) *GB_LCD = (M);
 
-void
-gb_set_bg_palette (uint8_t palette);
+#define gb_set_bg_palette(P) *GB_BG_PALETTE = (P);
 
 #define gb_set_all_tile_data(P) memset (GB_TILE_DATA, (P), 0x1000);
-#define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x200);
+#define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x400);
 
 #endif

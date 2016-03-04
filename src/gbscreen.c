@@ -84,15 +84,3 @@ putchar (char c)
   if (c >= 0)
     gb_puttile (c);
 }
-
-void
-gb_set_lcd_mode (uint8_t mode)
-{
-  *GB_LCD = mode;
-}
-
-void
-gb_set_bg_palette (uint8_t palette)
-{
-  *GB_BG_PALETTE = palette;
-}
