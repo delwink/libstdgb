@@ -47,6 +47,20 @@ gb_inc_cursor ()
     }
 }
 
+void
+gb_dec_cursor ()
+{
+  if (_gb_cursor_x == 0)
+    {
+      --_gb_cursor_y;
+      _gb_cursor_x = _gb_cursor_x_limit - 1;
+    }
+  else
+    {
+      --_gb_cursor_x;
+    }
+}
+
 static uint8_t
 get_byte_offset (uint8_t shift)
 {
@@ -81,6 +95,24 @@ gb_puttile (uint8_t tile)
 void
 putchar (char c)
 {
-  if (c >= 0)
-    gb_puttile (c);
+  switch (c)
+    {
+    case '\b':
+      gb_dec_cursor ();
+      break;
+
+    case '\n':
+      ++_gb_cursor_y;
+    case '\r':
+      _gb_cursor_x = 0;
+      break;
+
+    case '\v':
+      ++_gb_cursor_y;
+      break;
+
+    default:
+      if (c >= 0)
+	gb_puttile (c);
+    }
 }

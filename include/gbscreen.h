@@ -76,6 +76,9 @@ void
 gb_inc_cursor (void);
 
 void
+gb_dec_cursor (void);
+
+void
 gb_set_view (uint8_t x, uint8_t y);
 
 #define gb_shift_view(X,Y)				\
