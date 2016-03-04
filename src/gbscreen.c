@@ -113,6 +113,6 @@ putchar (char c)
 
     default:
       if (c >= 0)
-	gb_puttile (c);
+	gb_puttile (c + _gb_char_offset);
     }
 }
