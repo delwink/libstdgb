@@ -37,6 +37,16 @@ gb_define_tile (size_t start, uint8_t *data)
 }
 
 void
+gb_define_reverse_tile (size_t start, uint8_t *data)
+{
+  uint8_t *tiles = GB_TILE_DATA;
+  size_t i;
+
+  for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
+    tiles[i] = ~data[i];
+}
+
+void
 gb_inc_cursor ()
 {
   if (++_gb_cursor_x >= _gb_cursor_x_limit)
