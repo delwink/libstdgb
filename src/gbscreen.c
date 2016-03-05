@@ -97,6 +97,12 @@ gb_puttile (uint8_t tile)
   i += 32 * _gb_cursor_y;
   i += _gb_cursor_x;
 
+  if ((offset % 32) + _gb_cursor_x >= 32)
+    i -= 32;
+
+  if (i >= 0x400)
+    i -= 0x400;
+
   tiles[i] = tile;
   gb_inc_cursor ();
 }
