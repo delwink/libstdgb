@@ -65,7 +65,7 @@ extern uint8_t _gb_char_offset;
 
 extern uint8_t _gb_cursor_x, _gb_cursor_y;
 
-#define gb_set_cursor(X,Y) _gb_cursor_x = (X); _gb_cursor_y = (Y);
+#define gb_set_cursor(X,Y) { _gb_cursor_x = (X); _gb_cursor_y = (Y); }
 
 extern uint8_t _gb_cursor_x_limit, _gb_cursor_y_limit;
 
