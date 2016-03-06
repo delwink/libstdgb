@@ -164,4 +164,7 @@
 #define GB_BTN_B      (0x02)
 #define GB_BTN_A      (0x01)
 
+#define gb_disable_interrupts() __asm__ ("di");
+#define gb_enable_interrupts() __asm__("ei");
+
 #endif
