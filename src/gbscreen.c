@@ -27,6 +27,13 @@ uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
 static size_t offset = 0;
 
 void
+gb_wait_vblank ()
+{
+  while (*GB_LCD_YPOS != 0x91)
+    ;
+}
+
+void
 gb_define_tile (size_t start, uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;

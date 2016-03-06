@@ -85,6 +85,9 @@ gb_set_view (uint8_t x, uint8_t y);
   gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
 
 void
+gb_wait_vblank (void);
+
+void
 gb_define_tile (size_t i, uint8_t *tile_data);
 
 void
