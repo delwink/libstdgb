@@ -167,4 +167,6 @@
 #define gb_disable_interrupts() __asm__ ("di");
 #define gb_enable_interrupts() __asm__("ei");
 
+#define gb_set_rombank(B) *((uint8_t *) 0x2000) = (B);
+
 #endif
