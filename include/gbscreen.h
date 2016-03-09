@@ -88,10 +88,10 @@ void
 gb_wait_vblank (void);
 
 void
-gb_define_tile (size_t i, uint8_t *tile_data);
+gb_define_tile (uint8_t i, uint8_t *tile_data);
 
 void
-gb_define_reverse_tile (size_t i, uint8_t *tile_data);
+gb_define_reverse_tile (uint8_t i, uint8_t *tile_data);
 
 void
 gb_puttile (uint8_t tile);

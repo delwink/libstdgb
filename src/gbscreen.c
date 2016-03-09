@@ -24,7 +24,7 @@ uint8_t _gb_cursor_x_limit = GB_LCD_X_BYTE;
 uint8_t _gb_cursor_y = 0;
 uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
 
-static size_t offset = 0;
+static uint16_t offset = 0;
 
 void
 gb_wait_vblank ()
@@ -34,20 +34,20 @@ gb_wait_vblank ()
 }
 
 void
-gb_define_tile (size_t start, uint8_t *data)
+gb_define_tile (uint8_t start, uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
-  size_t i;
+  uint8_t i;
 
   for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
     tiles[i] = data[i];
 }
 
 void
-gb_define_reverse_tile (size_t start, uint8_t *data)
+gb_define_reverse_tile (uint8_t start, uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
-  size_t i;
+  uint8_t i;
 
   for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
     tiles[i] = ~data[i];
@@ -98,7 +98,7 @@ void
 gb_puttile (uint8_t tile)
 {
   uint8_t *tiles = GB_SCRN0;
-  size_t i;
+  uint16_t i;
 
   i = offset;
   i += 32 * _gb_cursor_y;
@@ -107,8 +107,7 @@ gb_puttile (uint8_t tile)
   if ((offset % 32) + _gb_cursor_x >= 32)
     i -= 32;
 
-  if (i >= 0x400)
-    i -= 0x400;
+  i %= 0x400;
 
   tiles[i] = tile;
   gb_inc_cursor ();
