@@ -34,6 +34,15 @@ gb_wait_vblank ()
 }
 
 void
+gb_wait_vframe ()
+{
+  while (*GB_LCD_YPOS == 91)
+    ;
+  while (*GB_LCD_YPOS != 91)
+    ;
+}
+
+void
 gb_define_tile (uint8_t start, uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
