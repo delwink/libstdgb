@@ -164,9 +164,30 @@
 #define GB_BTN_B      (0x02)
 #define GB_BTN_A      (0x01)
 
-#define gb_disable_interrupts() __asm__ ("di");
-#define gb_enable_interrupts() __asm__("ei");
+/* MBC1 controls */
 
-#define gb_set_rombank(B) *((uint8_t *) 0x2000) = (B);
+#define GB_MBC1_MODEL_16_8 (0x00)
+#define GB_MBC1_MODEL_4_32 (0x01)
+
+#define gb_mbc1_set_model(M) *((uint8_t *) 0x6000) = (M);
+
+/* MBC5 controls */
+
+#define gb_mbc5_select_rombank(B)				\
+  {								\
+    *((uint8_t *) 0x2100) = (uint8_t) (B) & 0x00FF;		\
+    *((uint8_t *) 0x3000) = (uint8_t) ((B) & 0x0100) >> 8;	\
+  }
+
+/* generic controls */
+
+#define gb_disable_interrupts() __asm__ ("di");
+#define gb_enable_interrupts() __asm__ ("ei");
+
+#define gb_enable_rambank() *((uint8_t *) 0x0000) = 0x0A;
+#define gb_disable_rambank() *((uint8_t *) 0x0000) = 0x00;
+
+#define gb_select_rombank(B) *((uint8_t *) 0x2100) = (B);
+#define gb_select_rambank(B) *((uint8_t *) 0x4000) = (B);
 
 #endif
