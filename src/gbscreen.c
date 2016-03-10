@@ -87,20 +87,14 @@ gb_dec_cursor ()
     }
 }
 
-static uint8_t
-get_byte_offset (uint8_t shift)
-{
-  return shift / 8;
-}
-
 void
 gb_set_view (uint8_t x, uint8_t y)
 {
   *GB_SCROLL_X = x;
   *GB_SCROLL_Y = y;
 
-  offset = get_byte_offset (x);
-  offset += 32 * get_byte_offset (y);
+  offset = x / 8;
+  offset += 4 * y; // optimized (32 * (y / 8))
 }
 
 void
