@@ -48,8 +48,8 @@ gb_define_tile (uint8_t start, uint8_t *data)
   uint8_t *tiles = GB_TILE_DATA;
   uint8_t i;
 
-  for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
-    tiles[i] = data[i];
+  for (tiles = &tiles[start * 16], i = 16; i != 0; ++tiles, ++data, --i)
+    *tiles = *data;
 }
 
 void
@@ -58,8 +58,8 @@ gb_define_reverse_tile (uint8_t start, uint8_t *data)
   uint8_t *tiles = GB_TILE_DATA;
   uint8_t i;
 
-  for (tiles = &tiles[start * 16], i = 0; i < 16; ++i)
-    tiles[i] = ~data[i];
+  for (tiles = &tiles[start * 16], i = 16; i != 0; ++tiles, ++data, --i)
+    *tiles = ~(*data);
 }
 
 void
