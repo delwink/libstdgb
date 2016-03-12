@@ -120,6 +120,9 @@ gb_puttile (uint8_t tile)
 
   i %= 0x400;
 
+  if (!gb_have_vblank ())
+    gb_wait_vblank ();
+
   tiles[i] = tile;
   gb_inc_cursor ();
 }
