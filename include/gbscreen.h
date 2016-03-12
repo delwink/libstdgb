@@ -88,9 +88,6 @@ void
 gb_wait_vblank (void);
 
 void
-gb_wait_vframe (void);
-
-void
 gb_define_tile (uint8_t i, uint8_t *tile_data);
 
 void

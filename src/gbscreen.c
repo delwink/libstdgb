@@ -15,6 +15,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdbool.h>
+
 #include "gbhardware.h"
 #include "gbscreen.h"
 
@@ -24,22 +26,28 @@ uint8_t _gb_cursor_x_limit = GB_LCD_X_BYTE;
 uint8_t _gb_cursor_y = 0;
 uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
 
+static bool vblank = false;
 static uint16_t offset = 0;
+
+void
+_vblank_trigger ()
+{
+  __asm__ ("push hl");
+  vblank = true;
+  __asm__ ("pop hl");
+  gb_enable_interrupts ();
+}
 
 void
 gb_wait_vblank ()
 {
-  while (*GB_LCD_YPOS != 0x91)
-    ;
-}
+  *GB_INT_ENABLE |= GB_INT_VBLANK;
+  gb_enable_interrupts ();
 
-void
-gb_wait_vframe ()
-{
-  while (*GB_LCD_YPOS == 91)
-    ;
-  while (*GB_LCD_YPOS != 91)
-    ;
+  while (!vblank)
+    gb_halt ();
+
+  vblank = false;
 }
 
 void
