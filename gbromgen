@@ -1,0 +1,233 @@
+#! /usr/bin/env python3
+##
+##  gbromgen - generate full ROM images for the Game Boy
+##  Copyright (C) 2016 Delwink, LLC
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU Affero General Public License as published by
+##  the Free Software Foundation, version 3 only.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU Affero General Public License for more details.
+##
+##  You should have received a copy of the GNU Affero General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+
+from argparse import Action, ArgumentParser
+from datetime import datetime
+from os import makedirs, remove
+from os.path import exists, join
+from shutil import copy, rmtree
+from subprocess import call
+from sys import stderr
+from tempfile import gettempdir
+
+__title__ = 'gbromgen'
+__version__ = '0.0.0'
+__author__ = 'David McMackins II'
+__version_info__ = '''{} {}
+Copyright (C) 2016 Delwink, LLC
+License AGPLv3: GNU AGPL version 3 only <http://gnu.org/licenses/agpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by {}'''.format(__title__, __version__, __author__)
+
+class VersionAction(Action):
+    def __call__(self, parser, values, namespace, option_string):
+        print(__version_info__)
+        exit(0)
+
+cli = ArgumentParser(__title__)
+
+# script meta
+cli.add_argument('--version', action=VersionAction, nargs=0,
+                 help='Show version information and exit')
+
+# game meta
+cli.add_argument('--name', default='GAME', type=str, help='Name of your game')
+
+# hardware info
+cli.add_argument('--mbc', default='rom', metavar='TYPE',
+                 help='Cartridge hardware info')
+cli.add_argument('--ram-banks', default=0, type=int, metavar='NUM',
+                 help='Number of RAM banks')
+cli.add_argument('--rom-banks', default=2, type=int, metavar='NUM',
+                 help='Number of ROM banks')
+
+# files
+cli.add_argument('infile', type=str, help='An Intel hex file as the input')
+cli.add_argument('outfile', default='', type=str, nargs='?',
+                 help='The name of the final ROM to be generated')
+
+args = cli.parse_args()
+
+def jp(addr, f):
+    addr = (addr & 0xFF, (addr & 0xFF00) >> 8)
+    f.write(b'\xC3') # jp instruction
+    f.write(bytes(addr))
+
+def reti(f):
+    f.write(b'\xD9') # reti instruction
+
+def get_complement(total):
+    total += 25 # because reasons
+    return (0x100 - (total & 0xFF)) % 0x100
+
+def get_function_pos(noi_path, func):
+    with open(noi_path) as noi:
+        for line in noi:
+            line = line.split()
+            if line[0] == 'DEF' and line[1] == '_' + func:
+                return int(line[2], 16)
+
+    return None
+
+VALID_CART_TYPES = {
+    'rom': 0x00,
+
+    'mbc1': 0x01,
+    'mbc1+ram': 0x02,
+    'batt+mbc1+ram': 0x03,
+
+    'mbc2': 0x05,
+    'batt+mbc2': 0x06,
+
+    'ram': 0x08,
+    'batt+ram': 0x09,
+
+    'mmm01': 0x0B,
+    'mmm01+sram': 0x0C,
+    'batt+mmm01+sram': 0x0D,
+
+    'batt+mbc3+timer': 0x0F,
+    'batt+mbc3+ram+timer': 0x10,
+    'mbc3': 0x11,
+    'mbc3+ram': 0x12,
+    'batt+mbc3+ram': 0x13,
+
+    'mbc5': 0x19,
+    'mbc5+ram': 0x1A,
+    'batt+mbc5+ram': 0x1B,
+    'mbc5+rumble': 0x1C,
+    'mbc5+rumble+sram': 0x1D,
+    'batt+mbc5+rumble+sram': 0x1E
+}
+
+def get_mbc_type(mbc_str):
+    specs = [s.lower() for s in mbc_str.split('+')]
+    specs.sort()
+    return VALID_CART_TYPES['+'.join(specs)]
+
+def warn(*args):
+    print(__title__ + ': warning:', *args, file=stderr)
+
+if not args.infile.endswith('.ihx'):
+    warn('Input file does not have Intel hex standard extension')
+    base_file_name = args.infile
+else:
+    base_file_name = args.infile[:-4]
+
+noi_path = base_file_name + '.noi'
+gb_path = args.outfile if args.outfile else base_file_name + '.gb'
+
+vblank = get_function_pos(noi_path, '_vblank_trigger')
+if vblank is None:
+    warn('Could not locate vblank trigger function')
+
+mbc = get_mbc_type(args.mbc)
+
+ROM_BANKS = (2, 4, 8, 16, 32, 64, 128)
+RAM_BANKS = (0, -1, 1, 4, 16)
+ROMBANK_SIZE = 1024 * 16
+
+CART_TYPE_ADDR = 0x147
+COMP_ADDR = 0x14D
+ROMBANKS_ADDR = 0x148
+RAMBANKS_ADDR = 0x149
+VBLANK_ADDR = 0x40
+
+NOW = datetime.now()
+TIMESTAMP = '{}{}{}{}'.format(NOW.hour, NOW.minute, NOW.second, NOW.microsecond)
+
+TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
+makedirs(TEMPDIR)
+
+def write_bank(n, outfile):
+    size = 0
+    while size < ROMBANK_SIZE:
+        outfile.write(b'\xFF')
+        size += 1
+
+try:
+    temp_gb = join(TEMPDIR, 'temp.gb')
+    rc = call(['makebin', '-Z', '-p', '-yn', args.name, args.infile, temp_gb])
+    if rc:
+        raise RuntimeError('makebin failed with rc={}'.format(rc))
+
+    size = 0
+    with open(temp_gb, 'rb') as infile, open(gb_path, 'wb') as outfile:
+        comp_sum = 0
+        c = infile.read(1)
+        while c:
+            if size == VBLANK_ADDR:
+                if vblank:
+                    jp(vblank, outfile)
+                    infile.read(2)
+                    size += 3
+                else:
+                    reti(outfile)
+                    size += 1
+
+                c = infile.read(1)
+                continue
+
+            if size == CART_TYPE_ADDR:
+                byte = mbc
+            elif size == ROMBANKS_ADDR:
+                byte = ROM_BANKS.index(args.rom_banks)
+            elif size == RAMBANKS_ADDR:
+                byte = RAM_BANKS.index(args.ram_banks)
+            elif size == COMP_ADDR:
+                byte = get_complement(comp_sum)
+            else:
+                byte = c[0]
+
+            outfile.write(bytes([byte]))
+
+            if 0x134 <= size < COMP_ADDR:
+                comp_sum += byte
+
+            size += 1
+            c = infile.read(1)
+
+        if mbc == 0x00:
+            if size >= ROMBANK_SIZE * 2:
+                raise RuntimeError('ROM size exceeds 32k')
+
+            while size < ROMBANK_SIZE * 2:
+                outfile.write(b'\xFF')
+                size += 1
+
+            exit(0)
+        elif size >= ROMBANK_SIZE:
+            raise RuntimeError('Game code exceeds space in ROM bank 0')
+
+        while size < ROMBANK_SIZE:
+            outfile.write(b'\xFF')
+            size += 1
+
+        banks_written = 1
+        while banks_written < args.rom_banks:
+            write_bank(banks_written + 1, outfile)
+            banks_written += 1
+except Exception as e:
+    if exists(gb_path):
+        remove(gb_path)
+
+    raise
+finally:
+    rmtree(TEMPDIR)
