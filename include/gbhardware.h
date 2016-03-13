@@ -184,6 +184,7 @@
 #define gb_disable_interrupts() __asm__ ("di");
 #define gb_enable_interrupts() __asm__ ("ei");
 #define gb_halt() __asm__ ("halt\n\tnop");
+#define gb_stop() __asm__ ("stop");
 
 #define gb_enable_rambank() *((uint8_t *) 0x0000) = 0x0A;
 #define gb_disable_rambank() *((uint8_t *) 0x0000) = 0x00;
