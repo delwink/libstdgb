@@ -26,7 +26,7 @@ uint8_t _gb_cursor_x_limit = GB_LCD_X_BYTE;
 uint8_t _gb_cursor_y = 0;
 uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
 
-static bool vblank = false;
+static volatile bool vblank = false;
 static uint16_t offset = 0;
 
 void
@@ -44,10 +44,10 @@ gb_wait_vblank ()
   *GB_INT_ENABLE |= GB_INT_VBLANK;
   gb_enable_interrupts ();
 
+  vblank = false;
+
   while (!vblank)
     gb_halt ();
-
-  vblank = false;
 }
 
 void
