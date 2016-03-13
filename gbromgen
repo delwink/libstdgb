@@ -44,6 +44,8 @@ class VersionAction(Action):
 cli = ArgumentParser(__title__)
 
 # script meta
+cli.add_argument('-v', '--verbose', action='store_true',
+                 help='Show more details')
 cli.add_argument('--version', action=VersionAction, nargs=0,
                  help='Show version information and exit')
 
@@ -156,8 +158,17 @@ TIMESTAMP = '{}{}{}{}'.format(NOW.hour, NOW.minute, NOW.second, NOW.microsecond)
 TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 makedirs(TEMPDIR)
 
+def print_bank_info(n, written):
+    if args.verbose:
+        s = 'rom bank {} uses {} bytes ({}%)'
+        s = s.format(n, written, format((written / ROMBANK_SIZE) * 100, '.1f'))
+        print(__title__ + ':', s)
+
 def write_bank(n, outfile):
     size = 0
+
+    print_bank_info(n, size)
+
     while size < ROMBANK_SIZE:
         outfile.write(b'\xFF')
         size += 1
@@ -204,6 +215,8 @@ try:
             size += 1
             c = infile.read(1)
 
+        print_bank_info(0, size)
+
         if mbc == 0x00:
             if size >= ROMBANK_SIZE * 2:
                 raise RuntimeError('ROM size exceeds 32k')
@@ -222,7 +235,7 @@ try:
 
         banks_written = 1
         while banks_written < args.rom_banks:
-            write_bank(banks_written + 1, outfile)
+            write_bank(banks_written, outfile)
             banks_written += 1
 except Exception as e:
     if exists(gb_path):
