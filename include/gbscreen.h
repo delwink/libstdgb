@@ -22,6 +22,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define GB_TILE_DATA       ((uint8_t *) 0x8000)
+#define GB_TILE_DATA_END   ((uint8_t *) 0x8FFF)
+
+#define GB_SCRN0           ((uint8_t *) 0x9800)
+#define GB_SCRN0_END       ((uint8_t *) 0x9BFF)
+
+#define GB_SCRN1           ((uint8_t *) 0x9C00)
+#define GB_SCRN1_END       ((uint8_t *) 0x9FFF)
+
+extern uint8_t *_gb_active_screen;
+
+#define gb_set_screen(S) _gb_active_screen = (S);
+
 /* LCD flags */
 
 #define GB_LCD_OFF     (0x00)
@@ -84,7 +97,7 @@ gb_set_view (uint8_t x, uint8_t y);
 #define gb_shift_view(X,Y)				\
   gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
 
-#define gb_have_vblank() ((*GB_LCD_STATE & 0x02) == 0)
+#define gb_have_vblank() ((*GB_LCD_STATE & 0x03) == 1)
 
 void
 gb_wait_vblank (void);

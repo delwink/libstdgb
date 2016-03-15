@@ -25,15 +25,6 @@
 #define GB_VRAM            ((uint8_t *) 0x8000)
 #define GB_VRAM_END        ((uint8_t *) 0x9FFF)
 
-#define GB_TILE_DATA       ((uint8_t *) 0x8000)
-#define GB_TILE_DATA_END   ((uint8_t *) 0x8FFF)
-
-#define GB_SCRN0           ((uint8_t *) 0x9800)
-#define GB_SCRN0_END       ((uint8_t *) 0x9BFF)
-
-#define GB_SCRN1           ((uint8_t *) 0x9C00)
-#define GB_SCRN1_END       ((uint8_t *) 0x9FFF)
-
 #define GB_RAM             ((uint8_t *) 0xC000)
 #define GB_RAM_END         ((uint8_t *) 0xDFFF)
 

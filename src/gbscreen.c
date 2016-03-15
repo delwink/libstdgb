@@ -25,6 +25,7 @@ uint8_t _gb_cursor_x = 0;
 uint8_t _gb_cursor_x_limit = GB_LCD_X_BYTE;
 uint8_t _gb_cursor_y = 0;
 uint8_t _gb_cursor_y_limit = GB_LCD_Y_BYTE;
+uint8_t *_gb_active_screen = GB_SCRN0;
 
 static volatile bool vblank = false;
 static uint16_t offset = 0;
@@ -108,7 +109,6 @@ gb_set_view (uint8_t x, uint8_t y)
 void
 gb_puttile (uint8_t tile)
 {
-  uint8_t *tiles = GB_SCRN0;
   uint16_t i;
 
   i = offset;
@@ -123,7 +123,7 @@ gb_puttile (uint8_t tile)
   if (!gb_have_vblank ())
     gb_wait_vblank ();
 
-  tiles[i] = tile;
+  _gb_active_screen[i] = tile;
   gb_inc_cursor ();
 }
 
