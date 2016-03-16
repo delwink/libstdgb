@@ -60,6 +60,10 @@ cli.add_argument('--ram-banks', default=0, type=int, metavar='NUM',
 cli.add_argument('--rom-banks', default=2, type=int, metavar='NUM',
                  help='Number of ROM banks')
 
+# triggers
+cli.add_argument('--vblank', default='_vblank_trigger', metavar='FUNC',
+                 help='Name of function to call on vblank interrupt')
+
 # files
 cli.add_argument('infile', type=str, help='An Intel hex file as the input')
 cli.add_argument('outfile', default='', type=str, nargs='?',
@@ -136,9 +140,9 @@ else:
 noi_path = base_file_name + '.noi'
 gb_path = args.outfile if args.outfile else base_file_name + '.gb'
 
-vblank = get_function_pos(noi_path, '_vblank_trigger')
+vblank = get_function_pos(noi_path, args.vblank)
 if vblank is None:
-    warn('Could not locate vblank trigger function')
+    warn('Could not locate vblank trigger function "{}"'.format(args.vblank))
 
 mbc = get_mbc_type(args.mbc)
 
