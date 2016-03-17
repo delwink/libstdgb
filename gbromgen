@@ -157,7 +157,7 @@ RAMBANKS_ADDR = 0x149
 VBLANK_ADDR = 0x40
 
 NOW = datetime.now()
-TIMESTAMP = '{}{}{}{}'.format(NOW.hour, NOW.minute, NOW.second, NOW.microsecond)
+TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
 
 TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 makedirs(TEMPDIR)
