@@ -15,7 +15,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdbool.h>
+#ifndef OLD_SDCC
+# include <stdbool.h>
+#else
+# define true 1
+# define false 0
+# define bool char
+#endif
 
 #include "gbhardware.h"
 #include "gbscreen.h"
