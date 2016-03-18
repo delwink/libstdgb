@@ -72,25 +72,6 @@ extern uint8_t *_gb_active_screen;
 #define GB_LCD_X_BYTE  (20)
 #define GB_LCD_Y_BYTE  (18)
 
-extern uint8_t _gb_char_offset;
-
-#define gb_set_ascii_offset(N) _gb_char_offset = (N);
-
-extern uint8_t _gb_cursor_x, _gb_cursor_y;
-
-#define gb_set_cursor(X,Y) { _gb_cursor_x = (X); _gb_cursor_y = (Y); }
-
-extern uint8_t _gb_cursor_x_limit, _gb_cursor_y_limit;
-
-#define gb_set_cursor_x_limit(L) _gb_cursor_x_limit = (L);
-#define gb_set_cursor_y_limit(L) _gb_cursor_y_limit = (L);
-
-void
-gb_inc_cursor (void);
-
-void
-gb_dec_cursor (void);
-
 void
 gb_set_view (uint8_t x, uint8_t y);
 
@@ -98,6 +79,9 @@ gb_set_view (uint8_t x, uint8_t y);
   gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
 
 #define gb_have_vblank() ((*GB_LCD_STATE & 0x03) == 1)
+
+void
+gb_enable_vblank (void);
 
 void
 gb_wait_vblank (void);
@@ -108,14 +92,11 @@ gb_define_tile (uint8_t i, uint8_t *tile_data);
 void
 gb_define_reverse_tile (uint8_t i, uint8_t *tile_data);
 
-void
-gb_puttile (uint8_t tile);
-
 #define gb_set_lcd_mode(M) *GB_LCD = (M);
 
 #define gb_set_bg_palette(P) *GB_BG_PALETTE = (P);
 
 #define gb_set_all_tile_data(P) memset (GB_TILE_DATA, (P), 0x1000);
-#define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x400);
+#define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x800);
 
 #endif

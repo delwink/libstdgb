@@ -61,7 +61,7 @@ cli.add_argument('--rom-banks', default=2, type=int, metavar='NUM',
                  help='Number of ROM banks')
 
 # triggers
-cli.add_argument('--vblank', default='_vblank_trigger', metavar='FUNC',
+cli.add_argument('--vblank', default='', metavar='FUNC',
                  help='Name of function to call on vblank interrupt')
 
 # files
@@ -140,9 +140,11 @@ else:
 noi_path = base_file_name + '.noi'
 gb_path = args.outfile if args.outfile else base_file_name + '.gb'
 
-vblank = get_function_pos(noi_path, args.vblank)
-if vblank is None:
-    warn('Could not locate vblank trigger function "{}"'.format(args.vblank))
+vblank = None
+if args.vblank:
+    vblank = get_function_pos(noi_path, args.vblank)
+    if vblank is None:
+        warn('Could not locate vblank trigger function')
 
 mbc = get_mbc_type(args.mbc)
 
