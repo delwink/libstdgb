@@ -31,9 +31,18 @@
 #define GB_SCRN1           ((uint8_t *) 0x9C00)
 #define GB_SCRN1_END       ((uint8_t *) 0x9FFF)
 
-extern uint8_t *_gb_active_screen;
+#define GB_LCD_STATE       ((uint8_t *) 0xFF41)
 
-#define gb_set_screen(S) _gb_active_screen = (S);
+#define GB_SCROLL_Y        ((uint8_t *) 0xFF42)
+#define GB_SCROLL_X        ((uint8_t *) 0xFF43)
+
+#define GB_BG_PALETTE      ((uint8_t *) 0xFF47)
+
+#define GB_OBJ_PALETTE0    ((uint8_t *) 0xFF48)
+#define GB_OBJ_PALETTE1    ((uint8_t *) 0xFF49)
+
+#define GB_WIN_YPOS        ((uint8_t *) 0xFF4A)
+#define GB_WIN_XPOS        ((uint8_t *) 0xFF4B)
 
 /* LCD flags */
 

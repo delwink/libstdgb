@@ -52,23 +52,10 @@
 
 #define GB_LCD             ((uint8_t *) 0xFF40)
 
-#define GB_LCD_STATE       ((uint8_t *) 0xFF41)
-
-#define GB_SCROLL_Y        ((uint8_t *) 0xFF42)
-#define GB_SCROLL_X        ((uint8_t *) 0xFF43)
-
 #define GB_LCD_YPOS        ((uint8_t *) 0xFF44)
 #define GB_LCD_XPOS        ((uint8_t *) 0xFF45)
 
 #define GB_DMA             ((uint8_t *) 0xFF46)
-
-#define GB_BG_PALETTE      ((uint8_t *) 0xFF47)
-
-#define GB_OBJ_PALETTE0    ((uint8_t *) 0xFF48)
-#define GB_OBJ_PALETTE1    ((uint8_t *) 0xFF49)
-
-#define GB_WIN_YPOS        ((uint8_t *) 0xFF4A)
-#define GB_WIN_XPOS        ((uint8_t *) 0xFF4B)
 
 #define GB_CPU_SPEED       ((uint8_t *) 0xFF4D)
 
