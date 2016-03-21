@@ -64,6 +64,9 @@ cli.add_argument('--rom-banks', default=2, type=int, metavar='NUM',
 cli.add_argument('--vblank', default='', metavar='FUNC',
                  help='Name of function to call on vblank interrupt')
 
+# fields
+cli.add_argument('--fields', default='', help='Values of const fields')
+
 # files
 cli.add_argument('infile', type=str, help='An Intel hex file as the input')
 cli.add_argument('outfile', default='', type=str, nargs='?',
@@ -83,11 +86,11 @@ def get_complement(total):
     total += 25 # because reasons
     return (0x100 - (total & 0xFF)) % 0x100
 
-def get_function_pos(noi_path, func):
+def get_symbol_pos(noi_path, s):
     with open(noi_path) as noi:
         for line in noi:
             line = line.split()
-            if line[0] == 'DEF' and line[1] == '_' + func:
+            if line[0] == 'DEF' and line[1] == '_' + s:
                 return int(line[2], 16)
 
     return None
@@ -142,9 +145,38 @@ gb_path = args.outfile if args.outfile else base_file_name + '.gb'
 
 vblank = None
 if args.vblank:
-    vblank = get_function_pos(noi_path, args.vblank)
+    vblank = get_symbol_pos(noi_path, args.vblank)
     if vblank is None:
         warn('Could not locate vblank trigger function')
+
+fields = {}
+if args.fields:
+    encoded = {}
+    fields = args.fields.split(';')
+    for field in fields:
+        name, value = field.split('=')
+        pos = get_symbol_pos(noi_path, name)
+        if pos is None:
+            warn('Could not locate field {}'.format(name))
+            continue
+
+        value = int(value)
+        if value < 0:
+            warn('Negative const field not supported: {}'.format(value))
+            continue
+
+        byte = (value.bit_length() + 7) // 8
+
+        byte_list = []
+        for i in range(byte):
+            shift = i * 8
+            mask = 0xFF << shift
+            byte_list.append((value & mask) >> shift)
+
+        for i in range(len(byte_list)):
+            encoded[pos + i] = byte_list[i]
+
+    fields = encoded
 
 mbc = get_mbc_type(args.mbc)
 
@@ -210,6 +242,8 @@ try:
                 byte = RAM_BANKS.index(args.ram_banks)
             elif size == COMP_ADDR:
                 byte = get_complement(comp_sum)
+            elif size in fields:
+                byte = fields[size]
             else:
                 byte = c[0]
 
