@@ -31,9 +31,6 @@
 #define GB_OAMRAM          ((uint8_t *) 0xFE00)
 #define GB_OAMRAM_END      ((uint8_t *) 0xFE9F)
 
-#define GB_AUD3WAVERAM     ((uint8_t *) 0xFF30)
-#define GB_AUD3WAVERAM_END ((uint8_t *) 0xFF3F)
-
 #define GB_HRAM            ((uint8_t *) 0xFF80)
 #define GB_HRAM_END        ((uint8_t *) 0xFFFE)
 
@@ -78,32 +75,6 @@
 #define GB_SEL_MAIN_RBANK  ((uint8_t *) 0xFF70)
 
 #define GB_INT_ENABLE      ((uint8_t *) 0xFFFF)
-
-#define GB_AUDIO_VOLUME    ((uint8_t *) 0xFF24)
-#define GB_AUDIO_TERMINAL  ((uint8_t *) 0xFF25)
-#define GB_AUDIO_ENABLE    ((uint8_t *) 0xFF26)
-
-#define GB_AUD1_SWEEP      ((uint8_t *) 0xFF10)
-#define GB_AUD1_LEN        ((uint8_t *) 0xFF11)
-#define GB_AUD1_ENV        ((uint8_t *) 0xFF12)
-#define GB_AUD1_LOW        ((uint8_t *) 0xFF13)
-#define GB_AUD1_HIGH       ((uint8_t *) 0xFF14)
-
-#define GB_AUD2_LEN        ((uint8_t *) 0xFF16)
-#define GB_AUD2_ENV        ((uint8_t *) 0xFF17)
-#define GB_AUD2_LOW        ((uint8_t *) 0xFF18)
-#define GB_AUD2_HIGH       ((uint8_t *) 0xFF19)
-
-#define GB_AUD3_ENABLE     ((uint8_t *) 0xFF1A)
-#define GB_AUD3_LEN        ((uint8_t *) 0xFF1B)
-#define GB_AUD3_LEVEL      ((uint8_t *) 0xFF1C)
-#define GB_AUD3_LOW        ((uint8_t *) 0xFF1D)
-#define GB_AUD3_HIGH       ((uint8_t *) 0xFF1E)
-
-#define GB_AUD4_LEN        ((uint8_t *) 0xFF20)
-#define GB_AUD4_ENV        ((uint8_t *) 0xFF21)
-#define GB_AUD4_POLY       ((uint8_t *) 0xFF22)
-#define GB_AUD4_GO         ((uint8_t *) 0xFF23) // strange name for this flag
 
 /* OAM flags */
 
