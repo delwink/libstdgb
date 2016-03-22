@@ -76,14 +76,6 @@
 
 #define GB_INT_ENABLE      ((uint8_t *) 0xFFFF)
 
-/* OAM flags */
-
-#define GB_OAM_PRI   (0x80)
-#define GB_OAM_YFLIP (0x40)
-#define GB_OAM_XFLIP (0x20)
-#define GB_OAM_PAL0  (0x00)
-#define GB_OAM_PAL1  (0x10)
-
 /* timer control flags */
 
 #define GB_TIMER_START  (0x04)

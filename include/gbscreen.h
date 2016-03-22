@@ -81,6 +81,14 @@
 #define GB_LCD_X_BYTE  (20)
 #define GB_LCD_Y_BYTE  (18)
 
+/* OAM flags */
+
+#define GB_OAM_PRI   (0x80)
+#define GB_OAM_YFLIP (0x40)
+#define GB_OAM_XFLIP (0x20)
+#define GB_OAM_PAL0  (0x00)
+#define GB_OAM_PAL1  (0x10)
+
 void
 gb_set_view (uint8_t x, uint8_t y);
 
