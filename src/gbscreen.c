@@ -18,6 +18,8 @@
 #include "gbhardware.h"
 #include "gbscreen.h"
 
+uint8_t (* const gb_objects)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
+
 void
 gb_enable_vblank ()
 {
@@ -61,3 +63,35 @@ gb_set_view (uint8_t x, uint8_t y)
   *GB_SCROLL_X = x;
   *GB_SCROLL_Y = y;
 }
+
+static void
+copy_objects ()
+{
+  __asm__ ("ld a,#0xDF\n\t"
+	   "ld (0xFF46),a\n\t"
+	   "ld a,#0x28\n"
+	   "obj_copy_wait:\n\t"
+	   "dec a\n\t"
+	   "jr nz,obj_copy_wait");
+}
+
+void
+gb_init_objects ()
+{
+  const uint8_t *src = (uint8_t *) copy_objects;
+  uint8_t *dest = GB_HRAM;
+  uint8_t len = 12;
+
+  while (len--)
+    *(dest++) = *(src++);
+}
+
+typedef void (*_gb_copy_func) (void);
+
+void
+gb_update_objects ()
+{
+  static _gb_copy_func copy = (_gb_copy_func) GB_HRAM;
+  copy ();
+}
+

@@ -83,11 +83,11 @@
 
 /* OAM flags */
 
-#define GB_OAM_PRI   (0x80)
-#define GB_OAM_YFLIP (0x40)
-#define GB_OAM_XFLIP (0x20)
-#define GB_OAM_PAL0  (0x00)
-#define GB_OAM_PAL1  (0x10)
+#define GB_OBJ_PRI   (0x80)
+#define GB_OBJ_YFLIP (0x40)
+#define GB_OBJ_XFLIP (0x20)
+#define GB_OBJ_PAL0  (0x00)
+#define GB_OBJ_PAL1  (0x10)
 
 void
 gb_set_view (uint8_t x, uint8_t y);
@@ -115,5 +115,23 @@ gb_define_reverse_tile (uint8_t i, uint8_t *tile_data);
 
 #define gb_set_all_tile_data(P) memset (GB_TILE_DATA, (P), 0x1000);
 #define gb_set_all_tile_maps(T) memset (GB_SCRN0, (T), 0x800);
+
+#define GB_NUM_OBJECTS (40)
+enum _gb_sprite_model
+  {
+    GB_OBJ_YPOS = 0,
+    GB_OBJ_XPOS,
+    GB_OBJ_TILE,
+    GB_OBJ_FLAGS,
+    GB_BYTES_PER_OBJ
+  };
+
+extern uint8_t (* const gb_objects)[GB_BYTES_PER_OBJ];
+
+void
+gb_init_objects (void);
+
+void
+gb_update_objects (void);
 
 #endif
