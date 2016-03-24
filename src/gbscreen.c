@@ -84,6 +84,8 @@ gb_init_objects ()
 
   while (len--)
     *(dest++) = *(src++);
+
+  memset (GB_OAMRAM, 0x00, 0xA0);
 }
 
 typedef void (*_gb_copy_func) (void);
