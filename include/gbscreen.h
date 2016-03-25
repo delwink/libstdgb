@@ -126,7 +126,7 @@ enum _gb_sprite_model
     GB_BYTES_PER_OBJ
   };
 
-extern uint8_t (* const gb_objects)[GB_BYTES_PER_OBJ];
+extern uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ];
 
 void
 gb_init_objects (void);

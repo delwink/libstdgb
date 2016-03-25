@@ -18,7 +18,7 @@
 #include "gbhardware.h"
 #include "gbscreen.h"
 
-uint8_t (* const gb_objects)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
+uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
 
 void
 gb_enable_vblank ()
