@@ -88,12 +88,9 @@ gb_init_objects ()
   memset (GB_OAMRAM, 0x00, 0xA0);
 }
 
-typedef void (*_gb_copy_func) (void);
-
 void
 gb_update_objects ()
 {
-  static _gb_copy_func copy = (_gb_copy_func) GB_HRAM;
-  copy ();
+  __asm__ ("jp 0xFF80");
 }
 
