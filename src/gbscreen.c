@@ -67,12 +67,12 @@ gb_set_view (uint8_t x, uint8_t y)
 static void
 copy_objects ()
 {
-  __asm__ ("ld a,#0xDF\n\t"
-	   "ld (0xFF46),a\n\t"
-	   "ld a,#0x28\n"
+  __asm__ ("ld a,#0xDF\n\t"        // specify that objects are at 0xDF00
+	   "ld (0xFF46),a\n\t"     // start DMA copy
+	   "ld a,#0x28\n"          // set wait counter to 40
 	   "obj_copy_wait:\n\t"
-	   "dec a\n\t"
-	   "jr nz,obj_copy_wait");
+	   "dec a\n\t"             // decrement counter
+	   "jr nz,obj_copy_wait"); // continue to wait until counter is zero
 }
 
 void
@@ -91,6 +91,6 @@ gb_init_objects ()
 void
 gb_update_objects ()
 {
-  __asm__ ("jp 0xFF80");
+  __asm__ ("jp 0xFF80"); // real function is at HRAM
 }
 
