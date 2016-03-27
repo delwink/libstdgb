@@ -38,17 +38,14 @@ gb_wait_vblank ()
 }
 
 void
-gb_define_tile (uint8_t start, uint8_t *data)
+gb_define_tile (uint8_t start, const uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
-  uint8_t i;
-
-  for (tiles = &tiles[start * 16], i = 16; i != 0; ++tiles, ++data, --i)
-    *tiles = *data;
+  memcpy (&tiles[start * 16], data, 16);
 }
 
 void
-gb_define_reverse_tile (uint8_t start, uint8_t *data)
+gb_define_reverse_tile (uint8_t start, const uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
   uint8_t i;
@@ -78,13 +75,7 @@ copy_objects ()
 void
 gb_init_objects ()
 {
-  const uint8_t *src = (uint8_t *) copy_objects;
-  uint8_t *dest = GB_HRAM;
-  uint8_t len = 12;
-
-  while (len--)
-    *(dest++) = *(src++);
-
+  memcpy (GB_HRAM, (uint8_t *) copy_objects, 12);
   memset (GB_OAMRAM, 0x00, 0xA0);
 }
 
