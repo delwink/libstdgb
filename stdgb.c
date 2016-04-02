@@ -15,8 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gbhardware.h"
-#include "gbscreen.h"
+#include "stdgb.h"
 
 uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
 
@@ -41,7 +40,7 @@ void
 gb_define_tile (uint8_t start, const uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
-  memcpy (&tiles[start * 16], data, 16);
+  gb_memcpy (&tiles[start * 16], data, 16);
 }
 
 void
@@ -75,7 +74,7 @@ copy_objects ()
 void
 gb_init_objects ()
 {
-  memcpy (GB_HRAM, (uint8_t *) copy_objects, 12);
+  gb_memcpy (GB_HRAM, (uint8_t *) copy_objects, 12);
   memset (GB_OAMRAM, 0x00, 0xA0);
 }
 
@@ -85,3 +84,9 @@ gb_update_objects ()
   __asm__ ("jp 0xFF80"); // real function is at HRAM
 }
 
+void
+gb_memcpy (uint8_t *dest, const uint8_t *src, uint8_t n)
+{
+  while (n--)
+    *(dest++) = *(src++);
+}
