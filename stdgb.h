@@ -207,8 +207,8 @@
 void
 gb_set_view (uint8_t x, uint8_t y);
 
-#define gb_shift_view(X,Y)				\
-  gb_set_view (*GB_SCROLL_X + (X), *GB_SCROLL_Y + (Y));
+void
+gb_shift_view (uint8_t x, uint8_t y);
 
 #define gb_have_vblank() ((*GB_LCD_STATE & 0x03) == 1)
 

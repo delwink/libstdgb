@@ -60,6 +60,13 @@ gb_set_view (uint8_t x, uint8_t y)
   *GB_SCROLL_Y = y;
 }
 
+void
+gb_shift_view (uint8_t x, uint8_t y)
+{
+  *GB_SCROLL_X += x;
+  *GB_SCROLL_Y += y;
+}
+
 static void
 copy_objects ()
 {
