@@ -221,9 +221,6 @@ gb_wait_vblank (void);
 void
 gb_define_tile (uint8_t i, const uint8_t *tile_data);
 
-void
-gb_define_reverse_tile (uint8_t i, const uint8_t *tile_data);
-
 #define gb_set_lcd_mode(M) *GB_LCD = (M);
 
 #define gb_set_bg_palette(P) *GB_BG_PALETTE = (P);

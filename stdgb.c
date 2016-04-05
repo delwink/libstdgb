@@ -44,16 +44,6 @@ gb_define_tile (uint8_t start, const uint8_t *data)
 }
 
 void
-gb_define_reverse_tile (uint8_t start, const uint8_t *data)
-{
-  uint8_t *tiles = GB_TILE_DATA;
-  uint8_t i;
-
-  for (tiles = &tiles[start * 16], i = 16; i != 0; ++tiles, ++data, --i)
-    *tiles = ~(*data);
-}
-
-void
 gb_set_view (uint8_t x, uint8_t y)
 {
   *GB_SCROLL_X = x;
