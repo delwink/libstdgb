@@ -51,7 +51,7 @@ gb_set_view (uint8_t x, uint8_t y)
 }
 
 void
-gb_shift_view (uint8_t x, uint8_t y)
+gb_shift_view (int8_t x, int8_t y)
 {
   *GB_SCROLL_X += x;
   *GB_SCROLL_Y += y;
