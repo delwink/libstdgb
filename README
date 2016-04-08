@@ -3,4 +3,41 @@ libstdgb
 
 A C library of useful Game Boy operations.
 
-Details coming soon...
+This library is designed to provide you a simple C interface to the hardware of
+the Game Boy hand-held gaming console. It's for the original Game Boy only:
+while the code will still run on the Color and Advance models, this library
+does not aim to provide interfaces to the features of those devices, such as
+color displays.
+
+Notice
+------
+
+libstdgb is made using the Small Device C Compiler (SDCC). SDCC has many
+versions which output code of varying quality. You should not expect a complete
+project to have the same binary size when compiled on different systems.
+
+The version on which this software was tested is not a perfectly optimized
+compiler either. For this reason, some of the code will instead be written in
+Game Boy assembly language for simple routines that can be easily perfected in
+assembly language. This is done necessary for a few reasons:
+
+- By writing in assembly language, the output code is predictable (exactly)
+- Binary size is a big concern in Game Boy programming; the smaller the better
+- For some functions, a program might not be able to tolerate a slow procedure
+  - For instance, copying tile maps to VRAM cannot take longer than VBlank
+
+Hacking
+-------
+
+libstdgb uses the GNU coding style for C with a strict 79-column limit in the
+source code. If you would like to contribute, [send your diff to Delwink][1],
+or submit a pull request on GitHub.
+
+License
+-------
+
+libstdgb is libre software: you are free to use, modify, and redistribute it
+under the terms of version 3 of the GNU Affero General Public License. See
+[COPYING](COPYING) for details.
+
+[1]: mailto:contribute@delwink.com
