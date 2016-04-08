@@ -72,7 +72,8 @@ void
 gb_init_objects ()
 {
   gb_memcpy (GB_HRAM, (uint8_t *) copy_objects, 12);
-  memset (GB_OAMRAM, 0x00, 0xA0);
+  memset (GB_OBJECTS, 0x00, 0xA0);
+  gb_update_objects ();
 }
 
 void
