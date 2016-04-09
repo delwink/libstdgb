@@ -152,9 +152,7 @@
 #define GB_SCROLL_X        ((uint8_t *) 0xFF43)
 
 #define GB_BG_PALETTE      ((uint8_t *) 0xFF47)
-
-#define GB_OBJ_PALETTE0    ((uint8_t *) 0xFF48)
-#define GB_OBJ_PALETTE1    ((uint8_t *) 0xFF49)
+#define GB_OBJ_PALETTES    ((uint8_t *) 0xFF48)
 
 #define GB_WIN_YPOS        ((uint8_t *) 0xFF4A)
 #define GB_WIN_XPOS        ((uint8_t *) 0xFF4B)
@@ -245,6 +243,8 @@ gb_init_objects (void);
 
 void
 gb_update_objects (void);
+
+#define gb_set_object_palette(I,P) GB_OBJ_PALETTES[(I)] = (P);
 
 /* audio control */
 
