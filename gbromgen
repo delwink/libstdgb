@@ -50,7 +50,7 @@ cli.add_argument('--version', action=VersionAction, nargs=0,
                  help='Show version information and exit')
 
 # game meta
-cli.add_argument('--name', default='GAME', type=str, help='Name of your game')
+cli.add_argument('--name', default='', type=str, help='Name of your game')
 
 # hardware info
 cli.add_argument('--mbc', default='rom', metavar='TYPE',
