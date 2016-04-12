@@ -31,7 +31,7 @@ Hacking
 
 libstdgb uses the GNU coding style for C with a strict 79-column limit in the
 source code. If you would like to contribute, [send your diff to Delwink][1],
-or submit a pull request on GitHub.
+or use GitHub's pull request system.
 
 License
 -------
