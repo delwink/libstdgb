@@ -97,10 +97,10 @@
 
 /* input codes */
 
-#define GB_PAD_DOWN   (0x80)
-#define GB_PAD_UP     (0x40)
-#define GB_PAD_LEFT   (0x20)
-#define GB_PAD_RIGHT  (0x10)
+#define GB_PAD_DOWN   (0x08)
+#define GB_PAD_UP     (0x04)
+#define GB_PAD_LEFT   (0x02)
+#define GB_PAD_RIGHT  (0x01)
 
 #define GB_BTN_START  (0x08)
 #define GB_BTN_SELECT (0x04)
