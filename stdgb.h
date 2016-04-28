@@ -95,7 +95,7 @@
 #define GB_INT_LCD    (0x02)
 #define GB_INT_VBLANK (0x01)
 
-/* input codes */
+/* joypad/button input */
 
 #define GB_PAD_DOWN   (0x08)
 #define GB_PAD_UP     (0x04)
@@ -106,6 +106,12 @@
 #define GB_BTN_SELECT (0x04)
 #define GB_BTN_B      (0x02)
 #define GB_BTN_A      (0x01)
+
+extern uint8_t * const GB_JOYPD_STATE;
+extern uint8_t * const GB_BTN_STATE;
+
+void
+gb_update_input_state (void);
 
 /* MBC1 controls */
 
