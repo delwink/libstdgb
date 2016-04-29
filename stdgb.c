@@ -18,7 +18,7 @@
 #include "stdgb.h"
 
 uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
-uint8_t * const GB_JOYPD_STATE = (void *) 0xDFA0;
+uint8_t * const GB_DPAD_STATE = (void *) 0xDFA0;
 uint8_t * const GB_BTN_STATE = (void *) 0xDFA1;
 
 void
@@ -29,7 +29,7 @@ gb_update_input_state ()
 	   "ld (#0xFF00), a\n\t" // set port to do so
 	   "ld a, (#0xFF00)\n\t" // read input ports
 	   "ld a, (#0xFF00)\n\t" // do this twice for necessary delay
-	   "ld (#0xDFA0), a\n\t" // save it in *GB_JOYPD_STATE
+	   "ld (#0xDFA0), a\n\t" // save it in *GB_DPAD_STATE
 
 	   "ld a, #0x10\n\t"     // read buttons
 	   "ld (#0xFF00), a\n\t" // set port to do so

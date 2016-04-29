@@ -36,7 +36,7 @@
 #define GB_HRAM            ((uint8_t *) 0xFF80)
 #define GB_HRAM_END        ((uint8_t *) 0xFFFE)
 
-#define GB_JOYPD           ((uint8_t *) 0xFF00)
+#define GB_INPUTS          ((uint8_t *) 0xFF00)
 
 #define GB_SER_XFER        ((uint8_t *) 0xFF01)
 #define GB_SER_IO          ((uint8_t *) 0xFF02)
@@ -97,17 +97,17 @@
 
 /* joypad/button input */
 
-#define GB_PAD_DOWN   (0x08)
-#define GB_PAD_UP     (0x04)
-#define GB_PAD_LEFT   (0x02)
-#define GB_PAD_RIGHT  (0x01)
+#define GB_DPAD_DOWN   (0x08)
+#define GB_DPAD_UP     (0x04)
+#define GB_DPAD_LEFT   (0x02)
+#define GB_DPAD_RIGHT  (0x01)
 
 #define GB_BTN_START  (0x08)
 #define GB_BTN_SELECT (0x04)
 #define GB_BTN_B      (0x02)
 #define GB_BTN_A      (0x01)
 
-extern uint8_t * const GB_JOYPD_STATE;
+extern uint8_t * const GB_DPAD_STATE;
 extern uint8_t * const GB_BTN_STATE;
 
 void
