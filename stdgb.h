@@ -113,6 +113,12 @@ extern uint8_t * const GB_BTN_STATE;
 void
 gb_update_input_state (void);
 
+uint8_t
+gb_get_dpad_direction (void);
+
+uint8_t
+gb_button_down (uint8_t button);
+
 /* MBC1 controls */
 
 #define GB_MBC1_MODEL_16_8 (0x00)

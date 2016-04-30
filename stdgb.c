@@ -21,6 +21,12 @@ uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
 uint8_t * const GB_DPAD_STATE = (void *) 0xDFA0;
 uint8_t * const GB_BTN_STATE = (void *) 0xDFA1;
 
+static void
+state_invert (uint8_t *state)
+{
+  *state = (~(*state)) & 0x0F;
+}
+
 void
 gb_update_input_state ()
 {
@@ -43,6 +49,33 @@ gb_update_input_state ()
 
 	   "ld a, #0x30\n\t"     // read none
 	   "ld (#0xFF00), a");   // set port to do so
+
+  state_invert (GB_DPAD_STATE);
+  state_invert (GB_BTN_STATE);
+}
+
+uint8_t
+gb_get_dpad_direction ()
+{
+  uint8_t state = *GB_DPAD_STATE;
+
+  switch (state)
+    {
+    case GB_DPAD_UP:
+    case GB_DPAD_DOWN:
+    case GB_DPAD_LEFT:
+    case GB_DPAD_RIGHT:
+      return state;
+
+    default:
+      return 0;
+    }
+}
+
+uint8_t
+gb_button_down (uint8_t button)
+{
+  return *GB_BTN_STATE & button;
 }
 
 void
