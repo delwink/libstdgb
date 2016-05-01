@@ -107,9 +107,6 @@
 #define GB_BTN_B      (0x02)
 #define GB_BTN_A      (0x01)
 
-extern uint8_t * const GB_DPAD_STATE;
-extern uint8_t * const GB_BTN_STATE;
-
 void
 gb_update_input_state (void);
 

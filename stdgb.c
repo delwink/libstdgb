@@ -18,8 +18,8 @@
 #include "stdgb.h"
 
 uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
-uint8_t * const GB_DPAD_STATE = (void *) 0xDFA0;
-uint8_t * const GB_BTN_STATE = (void *) 0xDFA1;
+static uint8_t * const DPAD_STATE = (void *) 0xDFA0;
+static uint8_t * const BTN_STATE = (void *) 0xDFA1;
 
 static void
 state_invert (uint8_t *state)
@@ -35,7 +35,7 @@ gb_update_input_state ()
 	   "ld (#0xFF00), a\n\t" // set port to do so
 	   "ld a, (#0xFF00)\n\t" // read input ports
 	   "ld a, (#0xFF00)\n\t" // do this twice for necessary delay
-	   "ld (#0xDFA0), a\n\t" // save it in *GB_DPAD_STATE
+	   "ld (#0xDFA0), a\n\t" // save it in *DPAD_STATE
 
 	   "ld a, #0x10\n\t"     // read buttons
 	   "ld (#0xFF00), a\n\t" // set port to do so
@@ -45,19 +45,19 @@ gb_update_input_state ()
 	   "ld a, (#0xFF00)\n\t"
 	   "ld a, (#0xFF00)\n\t"
 	   "ld a, (#0xFF00)\n\t"
-	   "ld (#0xDFA1), a\n\t" // save it in *GB_BTN_STATE
+	   "ld (#0xDFA1), a\n\t" // save it in *BTN_STATE
 
 	   "ld a, #0x30\n\t"     // read none
 	   "ld (#0xFF00), a");   // set port to do so
 
-  state_invert (GB_DPAD_STATE);
-  state_invert (GB_BTN_STATE);
+  state_invert (DPAD_STATE);
+  state_invert (BTN_STATE);
 }
 
 uint8_t
 gb_get_dpad_direction ()
 {
-  uint8_t state = *GB_DPAD_STATE;
+  uint8_t state = *DPAD_STATE;
 
   switch (state)
     {
@@ -75,7 +75,7 @@ gb_get_dpad_direction ()
 uint8_t
 gb_button_down (uint8_t button)
 {
-  return *GB_BTN_STATE & button;
+  return *BTN_STATE & button;
 }
 
 void
