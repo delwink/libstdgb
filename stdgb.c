@@ -22,7 +22,7 @@ static uint8_t * const DPAD_STATE = (void *) 0xDFA0;
 static uint8_t * const BTN_STATE = (void *) 0xDFA1;
 
 static void
-state_invert (uint8_t *state)
+invert_state (uint8_t *state)
 {
   *state = (~(*state)) & 0x0F;
 }
@@ -50,8 +50,8 @@ gb_update_input_state ()
 	   "ld a, #0x30\n\t"     // read none
 	   "ld (#0xFF00), a");   // set port to do so
 
-  state_invert (DPAD_STATE);
-  state_invert (BTN_STATE);
+  invert_state (DPAD_STATE);
+  invert_state (BTN_STATE);
 }
 
 uint8_t
