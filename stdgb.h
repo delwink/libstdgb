@@ -58,8 +58,6 @@
 
 #define GB_CPU_SPEED       ((uint8_t *) 0xFF4D)
 
-#define GB_VRAM_BANK       ((uint8_t *) 0xFF4F)
-
 #define GB_HDMA1           ((uint8_t *) 0xFF51)
 #define GB_HDMA2           ((uint8_t *) 0xFF52)
 #define GB_HDMA3           ((uint8_t *) 0xFF53)
