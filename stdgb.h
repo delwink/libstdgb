@@ -166,24 +166,24 @@ gb_button_down (uint8_t button);
 
 /* LCD flags */
 
-#define GB_LCD_OFF     (0x00)
-#define GB_LCD_ON      (0x80)
-#define GB_LCD_WIN9C00 (0x40)
-#define GB_LCD_WINON   (0x20)
-#define GB_LCD_BGON    (0x11)
-#define GB_LCD_OBJ16   (0x04)
-#define GB_LCD_OBJON   (0x02)
+#define GB_LCD_OFF      (0x00)
+#define GB_LCD_ON       (0x80)
+#define GB_LCD_WINSCRN1 (0x40)
+#define GB_LCD_WINON    (0x20)
+#define GB_LCD_BGON     (0x11)
+#define GB_LCD_OBJ16    (0x04)
+#define GB_LCD_OBJON    (0x02)
 
-#define GB_LCD_LYC     (0x40)
-#define GB_LCD_MODE10  (0x20)
-#define GB_LCD_MODE01  (0x10)
-#define GB_LCD_MODE00  (0x08)
-#define GB_LCD_LYCF    (0x04)
-#define GB_LCD_HBLANK  (0x00)
-#define GB_LCD_VBLANK  (0x01)
-#define GB_LCD_OAM     (0x02)
-#define GB_LCD_VRAM    (0x03)
-#define GB_LCD_BUSY    (0x02)
+#define GB_LCD_LYC      (0x40)
+#define GB_LCD_MODE10   (0x20)
+#define GB_LCD_MODE01   (0x10)
+#define GB_LCD_MODE00   (0x08)
+#define GB_LCD_LYCF     (0x04)
+#define GB_LCD_HBLANK   (0x00)
+#define GB_LCD_VBLANK   (0x01)
+#define GB_LCD_OAM      (0x02)
+#define GB_LCD_VRAM     (0x03)
+#define GB_LCD_BUSY     (0x02)
 
 /* screen facts */
 
