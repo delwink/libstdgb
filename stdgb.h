@@ -169,10 +169,10 @@ gb_button_down (uint8_t button);
 #define GB_LCD_OFF      (0x00)
 #define GB_LCD_ON       (0x80)
 #define GB_LCD_WINSCRN1 (0x40)
-#define GB_LCD_WINON    (0x20)
+#define GB_LCD_WINSCRN0 (0x20)
 #define GB_LCD_BGON     (0x11)
 #define GB_LCD_OBJ16    (0x04)
-#define GB_LCD_OBJON    (0x02)
+#define GB_LCD_OBJ8     (0x02)
 
 #define GB_LCD_LYC      (0x40)
 #define GB_LCD_MODE10   (0x20)
