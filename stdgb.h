@@ -109,7 +109,7 @@ void
 gb_update_input_state (void);
 
 uint8_t
-gb_get_dpad_direction (void);
+gb_dpad_down (uint8_t direction);
 
 uint8_t
 gb_button_down (uint8_t button);

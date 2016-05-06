@@ -61,21 +61,9 @@ gb_update_input_state ()
 }
 
 uint8_t
-gb_get_dpad_direction ()
+gb_dpad_down (uint8_t direction)
 {
-  uint8_t state = *DPAD_STATE;
-
-  switch (state)
-    {
-    case GB_DPAD_UP:
-    case GB_DPAD_DOWN:
-    case GB_DPAD_LEFT:
-    case GB_DPAD_RIGHT:
-      return state;
-
-    default:
-      return 0;
-    }
+  return *DPAD_STATE & direction;
 }
 
 uint8_t
