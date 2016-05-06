@@ -21,6 +21,12 @@ uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ] = (void *) 0xDF00;
 static uint8_t * const DPAD_STATE = (void *) 0xDFA0;
 static uint8_t * const BTN_STATE = (void *) 0xDFA1;
 
+void
+gb_mbc5_select_rombank (uint16_t bank)
+{
+  *((uint16_t *) 0x2FFF) = bank;
+}
+
 static void
 invert_state (uint8_t *state)
 {

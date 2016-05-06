@@ -123,11 +123,8 @@ gb_button_down (uint8_t button);
 
 /* MBC5 controls */
 
-#define gb_mbc5_select_rombank(B)				\
-  {								\
-    *((uint8_t *) 0x2100) = (uint8_t) ((B) & 0x00FF);		\
-    *((uint8_t *) 0x3000) = (uint8_t) (((B) & 0x0100) >> 8);	\
-  }
+void
+gb_mbc5_select_rombank (uint16_t bank);
 
 /* generic controls */
 
