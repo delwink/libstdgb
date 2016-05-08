@@ -36,15 +36,15 @@ invert_state (uint8_t *state)
 void
 gb_update_input_state ()
 {
-  // this routine is copied from the official Nintendo programming document
-  __asm__ ("ld a, #0x20\n\t"     // read d-pad
-	   "ld (#0xFF00), a\n\t" // set port to do so
+  // this routine is copied from the official Nintendo programming manual
+  __asm__ ("ld a, #0x20\n\t"     // load flag to read d-pad input
+	   "ld (#0xFF00), a\n\t" // make input request
 	   "ld a, (#0xFF00)\n\t" // read input ports
 	   "ld a, (#0xFF00)\n\t" // do this twice for necessary delay
 	   "ld (#0xDFA0), a\n\t" // save it in *DPAD_STATE
 
-	   "ld a, #0x10\n\t"     // read buttons
-	   "ld (#0xFF00), a\n\t" // set port to do so
+	   "ld a, #0x10\n\t"     // load flag to read button input
+	   "ld (#0xFF00), a\n\t" // make input request
 	   "ld a, (#0xFF00)\n\t" // read input ports
 	   "ld a, (#0xFF00)\n\t" // do this six times for necessary delay
 	   "ld a, (#0xFF00)\n\t"
@@ -53,8 +53,8 @@ gb_update_input_state ()
 	   "ld a, (#0xFF00)\n\t"
 	   "ld (#0xDFA1), a\n\t" // save it in *BTN_STATE
 
-	   "ld a, #0x30\n\t"     // read none
-	   "ld (#0xFF00), a");   // set port to do so
+	   "ld a, #0x30\n\t"     // load flag to read nothing
+	   "ld (#0xFF00), a");   // disable input reads
 
   invert_state (DPAD_STATE);
   invert_state (BTN_STATE);
