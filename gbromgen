@@ -274,7 +274,7 @@ try:
 
         if mbc == 0x00:
             if size >= ROMBANK_SIZE * 2:
-                raise RuntimeError('ROM size exceeds 32k')
+                fail('ROM size exceeds 32k')
 
             while size < ROMBANK_SIZE * 2:
                 outfile.write(b'\xFF')
@@ -282,7 +282,7 @@ try:
 
             exit(0)
         elif size >= ROMBANK_SIZE:
-            raise RuntimeError('Game code exceeds space in ROM bank 0')
+            fail('Game code exceeds space in ROM bank 0')
 
         while size < ROMBANK_SIZE:
             outfile.write(b'\xFF')
