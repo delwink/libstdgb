@@ -18,11 +18,12 @@
 
 from argparse import Action, ArgumentParser
 from datetime import datetime
+from json import load
 from os import makedirs, remove
-from os.path import exists, join
+from os.path import abspath, exists, join
 from shutil import copy, rmtree
 from subprocess import call
-from sys import stderr
+from sys import stderr, stdin
 from tempfile import gettempdir
 
 __title__ = 'gbromgen'
@@ -49,28 +50,8 @@ cli.add_argument('-v', '--verbose', action='store_true',
 cli.add_argument('--version', action=VersionAction, nargs=0,
                  help='Show version information and exit')
 
-# game meta
-cli.add_argument('--name', default='', type=str, help='Name of your game')
-
-# hardware info
-cli.add_argument('--mbc', default='rom', metavar='TYPE',
-                 help='Cartridge hardware info')
-cli.add_argument('--ram-banks', default=0, type=int, metavar='NUM',
-                 help='Number of RAM banks')
-cli.add_argument('--rom-banks', default=2, type=int, metavar='NUM',
-                 help='Number of ROM banks')
-
-# triggers
-cli.add_argument('--vblank', default='', metavar='FUNC',
-                 help='Name of function to call on vblank interrupt')
-
-# fields
-cli.add_argument('--fields', default='', help='Values of const fields')
-
 # files
-cli.add_argument('infile', type=str, help='An Intel hex file as the input')
-cli.add_argument('outfile', default='', type=str, nargs='?',
-                 help='The name of the final ROM to be generated')
+cli.add_argument('spec', type=str, help='A specification for the ROM image')
 
 args = cli.parse_args()
 
@@ -134,27 +115,48 @@ def get_mbc_type(mbc_str):
 def warn(*args):
     print(__title__ + ': warning:', *args, file=stderr)
 
-if not args.infile.endswith('.ihx'):
-    warn('Input file does not have Intel hex standard extension')
-    base_file_name = args.infile
+def fail(*args):
+    exit(__title__ + ': error:', *args, file=stderr)
+
+def get_path(p):
+    return join(RELATIVE_PATH, p)
+
+if args.spec != '-':
+    with open(args.spec) as f:
+        spec = load(f)
 else:
-    base_file_name = args.infile[:-4]
+    spec = load(stdin)
+
+if type(spec) is not dict:
+    fail('Input specification syntax error')
+
+RELATIVE_PATH = abspath(args.spec)
+
+if 'hex' not in spec:
+    fail("'hex' file not specified in input specification")
+
+hex_path = get_path(spec['hex'])
+if not hex_path.endswith('.ihx'):
+    warn('Input file does not have Intel hex standard extension')
+    base_file_name = hex_path
+else:
+    base_file_name = hex_path[:-4]
 
 noi_path = base_file_name + '.noi'
-gb_path = args.outfile if args.outfile else base_file_name + '.gb'
+gb_path = spec['output'] if spec['output'] else base_file_name + '.gb'
 
 vblank = None
-if args.vblank:
-    vblank = get_symbol_pos(noi_path, args.vblank)
+if 'vblank' in spec:
+    vblank = get_symbol_pos(noi_path, spec['vblank'])
     if vblank is None:
         warn('Could not locate vblank trigger function')
 
 fields = {}
-if args.fields:
+if 'const-fields' in spec:
     encoded = {}
-    fields = args.fields.split(';')
+    fields = spec['const-fields']
     for field in fields:
-        name, value = field.split('=')
+        name, value = (field, fields[field])
         pos = get_symbol_pos(noi_path, name)
         if pos is None:
             warn('Could not locate field {}'.format(name))
@@ -178,7 +180,10 @@ if args.fields:
 
     fields = encoded
 
-mbc = get_mbc_type(args.mbc)
+if spec['mbc']:
+    mbc = get_mbc_type(spec['mbc'])
+else:
+    mbc = get_mbc_type('rom')
 
 ROM_BANKS = (2, 4, 8, 16, 32, 64, 128)
 RAM_BANKS = (0, -1, 1, 4, 16)
@@ -211,9 +216,19 @@ def write_bank(n, outfile):
         outfile.write(b'\xFF')
         size += 1
 
+if 'name' not in spec:
+    spec['name'] = ''
+
+if 'rom-banks' not in spec:
+    spec['rom-banks'] = 2
+
+if 'ram-banks' not in spec:
+    spec['ram-banks'] = 0
+
 try:
     temp_gb = join(TEMPDIR, 'temp.gb')
-    rc = call(['makebin', '-Z', '-p', '-yn', args.name, args.infile, temp_gb])
+    rc = call(['makebin', '-Z', '-p', '-yn', spec['name'], spec['hex'],
+               temp_gb])
     if rc:
         raise RuntimeError('makebin failed with rc={}'.format(rc))
 
@@ -237,9 +252,9 @@ try:
             if size == CART_TYPE_ADDR:
                 byte = mbc
             elif size == ROMBANKS_ADDR:
-                byte = ROM_BANKS.index(args.rom_banks)
+                byte = ROM_BANKS.index(spec['rom-banks'])
             elif size == RAMBANKS_ADDR:
-                byte = RAM_BANKS.index(args.ram_banks)
+                byte = RAM_BANKS.index(spec['ram-banks'])
             elif size == COMP_ADDR:
                 byte = get_complement(comp_sum)
             elif size in fields:
@@ -274,7 +289,7 @@ try:
             size += 1
 
         banks_written = 1
-        while banks_written < args.rom_banks:
+        while banks_written < spec['rom-banks']:
             write_bank(banks_written, outfile)
             banks_written += 1
 except Exception as e:
