@@ -115,7 +115,15 @@ def get_mbc_type(mbc_str):
 def warn(*args):
     print(__title__ + ': warning:', *args, file=stderr)
 
+def clean_gb():
+    try:
+        if exists(gb_path):
+            remove(gb_path)
+    except NameError:
+        pass
+
 def fail(*args):
+    clean_gb()
     exit(__title__ + ': error:', *args, file=stderr)
 
 def get_path(p):
@@ -293,9 +301,7 @@ try:
             write_bank(banks_written, outfile)
             banks_written += 1
 except Exception as e:
-    if exists(gb_path):
-        remove(gb_path)
-
+    clean_gb()
     raise
 finally:
     rmtree(TEMPDIR)
