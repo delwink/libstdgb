@@ -46,3 +46,39 @@ compilation.
 
 The `output` field is a file path relative to the location of the spec file
 where the final executable ROM file will be placed.
+
+### Header level fields
+
+In addition to `name`, `hex`, and `output`, the following top-level fields may
+be used:
+
+- `mbc`: (string) Specification of the cartridge type (see below).
+- `ram-banks`: (integer) The number of RAM banks on the cartridge.
+- `rom-banks`: (integer) The number of ROM banks to be written.
+
+### Cartridge types
+
+If your cartridge is not a simple ROM, you may specify what hardware it has (as
+is allowable by the Game Boy spec). The following combinations are valid:
+
+- `mbc1`
+- `mbc1+ram`
+- `batt+mbc1+ram`
+- `mbc2`
+- `batt+mbc2`
+- `ram`
+- `batt+ram`
+- `mmm01`
+- `mmm01+sram`
+- `batt+mmm01+sram`
+- `batt+mbc3+timer`
+- `batt+mbc3+ram+timer`
+- `mbc3`
+- `mbc3+ram`
+- `batt+mbc3+ram`
+- `mbc5`
+- `mbc5+ram`
+- `batt+mbc5+ram`
+- `mbc5+rumble`
+- `mbc5+rumble+sram`
+- `batt+mbc5+rumble+sram`
