@@ -55,6 +55,7 @@ be used:
 - `mbc`: (string) Specification of the cartridge type (see below).
 - `ram-banks`: (integer) The number of RAM banks on the cartridge.
 - `rom-banks`: (integer) The number of ROM banks to be written.
+- `vblank`: (string) Name of a function to be executed at the vblank interrupt.
 
 ### Cartridge types
 
