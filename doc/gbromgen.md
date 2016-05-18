@@ -52,10 +52,25 @@ where the final executable ROM file will be placed.
 In addition to `name`, `hex`, and `output`, the following top-level fields may
 be used:
 
+- `const-fields`: (object) Definition of constant integer fields to be written
+  into the ROM (see below).
 - `mbc`: (string) Specification of the cartridge type (see below).
 - `ram-banks`: (integer) The number of RAM banks on the cartridge.
 - `rom-banks`: (integer) The number of ROM banks to be written.
 - `vblank`: (string) Name of a function to be executed at the vblank interrupt.
+
+### Constant integer fields
+
+You can define constant integer fields in your C code and assign them values in
+the spec. This includes pointers. This field in the spec is an object with
+string keys and unsigned integer values, as such:
+
+``` json
+{
+    "my_field": 120,
+    "my_other_field": 0x30
+}
+```
 
 ### Cartridge types
 
