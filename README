@@ -19,7 +19,7 @@ project to have the same binary size when compiled on different systems.
 The version on which this software was tested is not a perfectly optimized
 compiler either. For this reason, some of the code will instead be written in
 Game Boy assembly language for simple routines that can be easily perfected in
-assembly language. This is done necessary for a few reasons:
+assembly language. This is necessary for a few reasons:
 
 - By writing in assembly language, the output code is predictable (exactly)
 - Binary size is a big concern in Game Boy programming; the smaller the better
