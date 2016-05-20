@@ -9,6 +9,10 @@ while the code will still run on the Color and Advance models, this library
 does not aim to provide interfaces to the features of those devices, such as
 color displays.
 
+It also includes complementary post-processing tools designed to make it easy
+to organize your Game Boy binary file and formats efficiently on the ROM so you
+can spend more time making progress and less time fighting binary formats.
+
 Notice
 ------
 
