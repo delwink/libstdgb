@@ -3,3 +3,5 @@
 *.rel
 *.sym
 *.lib
+
+*__pycache__*
