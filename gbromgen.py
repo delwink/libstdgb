@@ -84,8 +84,6 @@ TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
 TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 RELATIVE_PATH = None
 
-verbose = False
-
 class VersionAction(Action):
     def __call__(self, parser, values, namespace, option_string):
         print(__version_info__)
@@ -134,16 +132,16 @@ def fail(*args):
 def get_path(p):
     return join(RELATIVE_PATH, p)
 
-def print_bank_info(n, written):
+def print_bank_info(n, written, verbose=False):
     if verbose:
         s = 'rom bank {} uses {} bytes ({}%)'
         s = s.format(n, written, format((written / ROMBANK_SIZE) * 100, '.1f'))
         print(__title__ + ':', s)
 
-def write_bank(n, outfile):
+def write_bank(n, outfile, verbose=False):
     size = 0
 
-    print_bank_info(n, size)
+    print_bank_info(n, size, verbose)
 
     while size < ROMBANK_SIZE:
         outfile.write(b'\xFF')
@@ -151,7 +149,6 @@ def write_bank(n, outfile):
 
 def main(args=argv[1:]):
     global RELATIVE_PATH
-    global verbose
 
     cli = ArgumentParser(__title__)
 
@@ -166,7 +163,6 @@ def main(args=argv[1:]):
                      help='A specification for the ROM image')
 
     args = cli.parse_args(args)
-    verbose = args.verbose
 
     if args.spec != '-':
         with open(args.spec) as f:
@@ -288,7 +284,7 @@ def main(args=argv[1:]):
                 size += 1
                 c = infile.read(1)
 
-            print_bank_info(0, size)
+            print_bank_info(0, size, args.verbose)
 
             if mbc == 0x00:
                 if size >= ROMBANK_SIZE * 2:
@@ -308,7 +304,7 @@ def main(args=argv[1:]):
 
             banks_written = 1
             while banks_written < spec['rom-banks']:
-                write_bank(banks_written, outfile)
+                write_bank(banks_written, outfile, args.verbose)
                 banks_written += 1
     except Exception as e:
         clean_gb()
