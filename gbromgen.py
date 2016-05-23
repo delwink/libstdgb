@@ -138,14 +138,20 @@ def print_bank_info(n, written, verbose=False):
         s = s.format(n, written, format((written / ROMBANK_SIZE) * 100, '.1f'))
         print(__title__ + ':', s)
 
+def flush_bank(outfile, written):
+    while written < ROMBANK_SIZE:
+        outfile.write(b'\xFF')
+        written += 1
+
+    return written
+
 def write_bank(n, outfile, verbose=False):
     size = 0
 
-    print_bank_info(n, size, verbose)
+    # TODO: determine write schedule and actually write
 
-    while size < ROMBANK_SIZE:
-        outfile.write(b'\xFF')
-        size += 1
+    print_bank_info(n, size, verbose)
+    flush_bank(outfile, size)
 
 def main(args=argv[1:]):
     global RELATIVE_PATH
