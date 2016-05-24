@@ -84,6 +84,18 @@ TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
 TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 RELATIVE_PATH = None
 
+CLI = ArgumentParser(__title__)
+
+# script meta
+CLI.add_argument('-v', '--verbose', action='store_true',
+                 help='Show more details')
+CLI.add_argument('--version', action=VersionAction, nargs=0,
+                 help='Show version information and exit')
+
+# files
+CLI.add_argument('spec', type=str,
+                 help='A specification for the ROM image')
+
 class VersionAction(Action):
     def __call__(self, parser, values, namespace, option_string):
         print(__version_info__)
@@ -156,19 +168,7 @@ def write_bank(n, outfile, verbose=False):
 def main(args=argv[1:]):
     global RELATIVE_PATH
 
-    cli = ArgumentParser(__title__)
-
-    # script meta
-    cli.add_argument('-v', '--verbose', action='store_true',
-                     help='Show more details')
-    cli.add_argument('--version', action=VersionAction, nargs=0,
-                     help='Show version information and exit')
-
-    # files
-    cli.add_argument('spec', type=str,
-                     help='A specification for the ROM image')
-
-    args = cli.parse_args(args)
+    args = CLI.parse_args(args)
 
     if args.spec != '-':
         with open(args.spec) as f:
