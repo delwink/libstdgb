@@ -78,12 +78,6 @@ ROMBANKS_ADDR = 0x148
 RAMBANKS_ADDR = 0x149
 VBLANK_ADDR = 0x40
 
-NOW = datetime.now()
-TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
-
-TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
-RELATIVE_PATH = None
-
 class VersionAction(Action):
     def __call__(self, parser, values, namespace, option_string):
         print(__version_info__)
@@ -141,9 +135,6 @@ def fail(*args):
     clean_gb()
     exit(__title__ + ': error:', *args, file=stderr)
 
-def get_path(p):
-    return join(RELATIVE_PATH, p)
-
 def print_bank_info(n, written, verbose=False):
     if verbose:
         s = 'rom bank {} uses {} bytes ({}%)'
@@ -166,7 +157,10 @@ def write_bank(n, outfile, verbose=False):
     flush_bank(outfile, size)
 
 def main(args=argv[1:]):
-    global RELATIVE_PATH
+    NOW = datetime.now()
+    TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
+
+    TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 
     args = CLI.parse_args(args)
 
@@ -184,7 +178,7 @@ def main(args=argv[1:]):
     if 'hex' not in spec:
         fail("'hex' file not specified in input specification")
 
-    hex_path = get_path(spec['hex'])
+    hex_path = join(RELATIVE_PATH, spec['hex'])
     if not hex_path.endswith('.ihx'):
         warn('Input file does not have Intel hex standard extension')
         base_file_name = hex_path
