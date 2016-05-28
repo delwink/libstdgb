@@ -303,7 +303,7 @@ def main(args=argv[1:]):
             print_bank_info(0, size, args.verbose)
 
             if mbc == 0x00:
-                if size >= ROMBANK_SIZE * 2:
+                if size > ROMBANK_SIZE * 2:
                     fail('ROM size exceeds 32k')
 
                 if size < ROMBANK_SIZE:
@@ -313,7 +313,8 @@ def main(args=argv[1:]):
                     flush_bank(outfile, size - ROMBANK_SIZE)
 
                 exit(0)
-            elif size >= ROMBANK_SIZE:
+
+            if size > ROMBANK_SIZE:
                 fail('Game code exceeds space in ROM bank 0')
 
             flush_bank(outfile, size)
