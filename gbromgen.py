@@ -123,18 +123,13 @@ def get_mbc_type(mbc_str):
     return VALID_CART_TYPES['+'.join(specs)]
 
 def warn(*args):
-    print(__title__ + ': warning:', *args, file=stderr)
+    print(__title__ + ': warning: ', *args, file=stderr)
 
-def clean_gb():
-    try:
-        if exists(gb_path):
-            remove(gb_path)
-    except NameError:
-        pass
+def fail(*args, rm=None):
+    if rm and exists(rm):
+        remove(rm)
 
-def fail(*args):
-    clean_gb()
-    exit(__title__ + ': error:', *args, file=stderr)
+    exit(__title__ + ': error: ' + ' '.join(args))
 
 def print_bank_info(n, written, verbose=False):
     if verbose:
@@ -304,7 +299,7 @@ def main(args=argv[1:]):
 
             if mbc == 0x00:
                 if size > ROMBANK_SIZE * 2:
-                    fail('ROM size exceeds 32k')
+                    fail('ROM size exceeds 32k', rm=gb_path)
 
                 if size < ROMBANK_SIZE:
                     flush_bank(outfile, size)
@@ -315,7 +310,7 @@ def main(args=argv[1:]):
                 exit(0)
 
             if size > ROMBANK_SIZE:
-                fail('Game code exceeds space in ROM bank 0')
+                fail('Game code exceeds space in ROM bank 0', rm=gb_path)
 
             flush_bank(outfile, size)
 
@@ -324,7 +319,8 @@ def main(args=argv[1:]):
                 write_bank(banks_written, outfile, args.verbose)
                 banks_written += 1
     except Exception as e:
-        clean_gb()
+        if exists(gb_path):
+            remove(gb_path)
         raise
     finally:
         rmtree(TEMPDIR)
