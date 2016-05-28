@@ -17,9 +17,8 @@
 ##
 
 from argparse import Action, ArgumentParser
-from datetime import datetime
 from json import load
-from os import makedirs, remove
+from os import getpid, makedirs, remove
 from os.path import abspath, exists, join
 from shutil import copy, rmtree
 from subprocess import call
@@ -95,6 +94,8 @@ CLI.add_argument('--version', action=VersionAction, nargs=0,
 CLI.add_argument('spec', type=str,
                  help='A specification for the ROM image')
 
+_num_runs = 0
+
 def jp(addr, f):
     addr = (addr & 0xFF, (addr & 0xFF00) >> 8)
     f.write(b'\xC3') # jp instruction
@@ -157,10 +158,13 @@ def write_bank(n, outfile, verbose=False):
     flush_bank(outfile, size)
 
 def main(args=argv[1:]):
-    NOW = datetime.now()
-    TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
+    global _num_runs
 
-    TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
+    PID = str(getpid())
+    STAMP = PID + '_' + str(_num_runs)
+    _num_runs += 1
+
+    TEMPDIR = join(gettempdir(), 'gbromgen-' + STAMP)
 
     args = CLI.parse_args(args)
 
