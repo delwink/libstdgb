@@ -306,10 +306,10 @@ def main(args=argv[1:]):
                 if size >= ROMBANK_SIZE * 2:
                     fail('ROM size exceeds 32k')
 
-                while size < ROMBANK_SIZE * 2:
-                    outfile.write(b'\xFF')
-                    size += 1
+                if size < ROMBANK_SIZE:
+                    flush_bank(outfile, size)
 
+                flush_bank(outfile, 0)
                 exit(0)
             elif size >= ROMBANK_SIZE:
                 fail('Game code exceeds space in ROM bank 0')
