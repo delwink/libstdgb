@@ -84,6 +84,11 @@ TIMESTAMP = '{}{}'.format(NOW.second, NOW.microsecond)
 TEMPDIR = join(gettempdir(), 'gbromgen-' + TIMESTAMP)
 RELATIVE_PATH = None
 
+class VersionAction(Action):
+    def __call__(self, parser, values, namespace, option_string):
+        print(__version_info__)
+        exit(0)
+
 CLI = ArgumentParser(__title__)
 
 # script meta
@@ -95,11 +100,6 @@ CLI.add_argument('--version', action=VersionAction, nargs=0,
 # files
 CLI.add_argument('spec', type=str,
                  help='A specification for the ROM image')
-
-class VersionAction(Action):
-    def __call__(self, parser, values, namespace, option_string):
-        print(__version_info__)
-        exit(0)
 
 def jp(addr, f):
     addr = (addr & 0xFF, (addr & 0xFF00) >> 8)
