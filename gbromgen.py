@@ -308,8 +308,10 @@ def main(args=argv[1:]):
 
                 if size < ROMBANK_SIZE:
                     flush_bank(outfile, size)
+                    flush_bank(outfile, 0)
+                else:
+                    flush_bank(outfile, size - ROMBANK_SIZE)
 
-                flush_bank(outfile, 0)
                 exit(0)
             elif size >= ROMBANK_SIZE:
                 fail('Game code exceeds space in ROM bank 0')
