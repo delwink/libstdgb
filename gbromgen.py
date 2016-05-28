@@ -144,8 +144,20 @@ def print_bank_info(n, written, verbose=False):
 
 def flush_bank(outfile, written):
     while written < ROMBANK_SIZE:
-        outfile.write(b'\xFF')
-        written += 1
+        # This block fills the unused parts of the ROM bank with failure code.
+        # It fills all spaces of 2 bytes with a STOP command, which will kill
+        # the device. Ideally, there are an even number of bytes so that all
+        # slack space is taken up by this command. In the event of an odd
+        # number, a RET command is inserted in attempt to return execution to
+        # some legitimate position in the game code. This way, the chance of an
+        # accidental jump which causes data corruption is minimized. Better to
+        # completely halt execution than to corrupt a save file.
+        if written != ROMBANK_SIZE - 1:
+            outfile.write(b'\x10\x00')
+            written += 2
+        else:
+            outfile.write(b'\xC9')
+            written += 1
 
     return written
 
@@ -302,9 +314,7 @@ def main(args=argv[1:]):
             elif size >= ROMBANK_SIZE:
                 fail('Game code exceeds space in ROM bank 0')
 
-            while size < ROMBANK_SIZE:
-                outfile.write(b'\xFF')
-                size += 1
+            flush_bank(outfile, size)
 
             banks_written = 1
             while banks_written < spec['rom-banks']:
