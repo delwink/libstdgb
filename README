@@ -13,6 +13,19 @@ It also includes complementary post-processing tools designed to make it easy
 to organize your Game Boy binary file and formats efficiently on the ROM so you
 can spend more time making progress and less time fighting binary formats.
 
+Dependencies
+------------
+
+| Program/Library         | Purpose                                         |
+|-------------------------|-------------------------------------------------|
+| Small Device C Compiler | C compiler used to generate binary instructions |
+| CPython 3               | Used for post-processing tools                  |
+| Wand for Python 3       | Used for converting images to Game Boy format   |
+
+On Debian-based systems, these can be installed as follows:
+
+    # apt-get install sdcc python3 python3-wand
+
 Notice
 ------
 

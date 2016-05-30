@@ -17,9 +17,10 @@
 ##
 
 from argparse import Action, ArgumentParser
+from gbimg import Tileset
 from json import load
 from os import getpid, makedirs, remove
-from os.path import abspath, exists, join
+from os.path import abspath, dirname, exists, join
 from shutil import copy, rmtree
 from subprocess import call
 from sys import argv, stderr, stdin
@@ -76,6 +77,21 @@ COMP_ADDR = 0x14D
 ROMBANKS_ADDR = 0x148
 RAMBANKS_ADDR = 0x149
 VBLANK_ADDR = 0x40
+SWITCHABLE_ROM_ADDR = 0x4000
+
+class UnsignedIntegerField:
+    def __init__(self, value, size):
+        self._value = int(value)
+        self._size = int(size)
+
+    def __bytes__(self):
+        b = []
+        for i in range(self._size):
+            shift = i * 8
+            mask = 0xFF << shift
+            b.append((self._value & mask) >> shift)
+
+        return bytes(b)
 
 class VersionAction(Action):
     def __call__(self, parser, values, namespace, option_string):
@@ -117,6 +133,11 @@ def get_symbol_pos(noi_path, s):
 
     return None
 
+def add_field(fields, field, pos):
+    b = bytes(field)
+    for i in range(len(b)):
+        fields[pos + i] = b[i]
+
 def get_mbc_type(mbc_str):
     specs = [s.lower() for s in mbc_str.split('+')]
     specs.sort()
@@ -156,10 +177,12 @@ def flush_bank(outfile, written):
 
     return written
 
-def write_bank(n, outfile, verbose=False):
+def write_bank(n, outfile, data, verbose=False):
     size = 0
 
-    # TODO: determine write schedule and actually write
+    for d in data:
+        outfile.write(d.data)
+        size += len(d.data)
 
     print_bank_info(n, size, verbose)
     flush_bank(outfile, size)
@@ -184,7 +207,7 @@ def main(args=argv[1:]):
     if type(spec) is not dict:
         fail('Input specification syntax error')
 
-    RELATIVE_PATH = abspath(args.spec)
+    RELATIVE_PATH = dirname(abspath(args.spec))
 
     if 'hex' not in spec:
         fail("'hex' file not specified in input specification")
@@ -250,6 +273,65 @@ def main(args=argv[1:]):
     if 'ram-banks' not in spec:
         spec['ram-banks'] = 0
 
+    bank_data = []
+    for _ in range(spec['rom-banks'] - 1):
+        bank_data.append([])
+
+    unalloc_data = []
+
+    if 'tilesets' in spec:
+        for tileset in spec['tilesets']:
+            if 'bank' not in tileset:
+                tileset['bank'] = None
+
+            tileset = Tileset(tileset['img'], tileset['data'], tileset['bank'])
+            if tileset.bank_num:
+                bank_data[tileset.bank_num - 1].append(tileset)
+            else:
+                unalloc_data.append(tileset)
+
+    for ud in unalloc_data:
+        ulen = len(ud)
+        allocated = False
+
+        for i in range(len(bank_data)):
+            b = bank_data[i]
+            blen = 0
+            for d in b:
+                blen += len(d)
+
+            if ROMBANK_SIZE - blen >= ulen:
+                ud.set_bank_num(i + 1)
+                b.append(ud)
+                allocated = True
+                break
+
+        if not allocated:
+            fail('No ROM space for ' + str(ud))
+
+        del ud
+
+    for b in bank_data:
+        pointer = 0
+
+        for d in b:
+            pos = get_symbol_pos(noi_path, d.data_var)
+            if pos:
+                field = UnsignedIntegerField(SWITCHABLE_ROM_ADDR + pointer, 2)
+                add_field(fields, field, pos)
+            else:
+                warn('Could not locate field {}'.format(d.data_var))
+
+            if d.bank_var:
+                pos = get_symbol_pos(noi_path, d.bank_var)
+                if pos:
+                    field = UnsignedIntegerField(d.bank_num, 1)
+                    add_field(fields, field, pos)
+                else:
+                    warn('Could not locate field {}'.format(d.data_var))
+
+            pointer += len(d)
+
     try:
         temp_gb = join(TEMPDIR, 'temp.gb')
         rc = call(['makebin', '-Z', '-p', '-yn', spec['name'], spec['hex'],
@@ -314,10 +396,8 @@ def main(args=argv[1:]):
 
             flush_bank(outfile, size)
 
-            banks_written = 1
-            while banks_written < spec['rom-banks']:
-                write_bank(banks_written, outfile, args.verbose)
-                banks_written += 1
+            for i in range(spec['rom-banks'] - 1):
+                write_bank(i + 1, outfile, bank_data[i], args.verbose)
     except Exception as e:
         if exists(gb_path):
             remove(gb_path)
