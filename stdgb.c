@@ -93,7 +93,7 @@ void
 gb_define_tile (uint8_t start, const uint8_t *data)
 {
   uint8_t *tiles = GB_TILE_DATA;
-  gb_memcpy (&tiles[start * 16], data, 16);
+  gb_memcpy (&tiles[start * GB_BYTES_PER_TILE], data, GB_BYTES_PER_TILE);
 }
 
 void

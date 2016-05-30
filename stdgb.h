@@ -211,6 +211,8 @@ gb_enable_vblank (void);
 void
 gb_wait_vblank (void);
 
+#define GB_BYTES_PER_TILE (16)
+
 void
 gb_define_tile (uint8_t i, const uint8_t *tile_data);
 
