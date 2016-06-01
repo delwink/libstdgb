@@ -57,6 +57,7 @@ be used:
 - `mbc`: (string) Specification of the cartridge type (see below).
 - `ram-banks`: (integer) The number of RAM banks on the cartridge.
 - `rom-banks`: (integer) The number of ROM banks to be written.
+- `tilesets`: (array of object) Defined tilesets for the ROM (see below).
 - `vblank`: (string) Name of a function to be executed at the vblank interrupt.
 
 ### Constant integer fields
@@ -98,3 +99,63 @@ is allowable by the Game Boy spec). The following combinations are valid:
 - `mbc5+rumble`
 - `mbc5+rumble+sram`
 - `batt+mbc5+rumble+sram`
+
+### Tilesets
+
+One of the most tedious part of Game Boy development is encoding your graphics
+in the Game Boy format and embedding them in the binary. Tools have existed
+which generate assembler and C code for embedding, but this poses some
+problems:
+
+1. SDCC cannot be told to store data in ROM banks; it is limited to 16k if
+   using switchable banks and 32k if using a normal ROM.
+2. The image you drew is not linked to the generated graphics. Every time you
+   want to change it, you must regenerate the encoded binary and reinsert it
+   into your code.
+3. Your binary graphics data are now taking up space in your source code
+   files. This not only inflates the disk footprint of your code base, it
+   clutters your code with data that are basically meaningless when in the
+   programming mindset of reading and interpreting source code.
+
+gbromgen addresses these problems by allowing you to point to images containing
+tilesets and associate the image with some variables in your code. Currently,
+there are three fields that need to be defined in your spec for each tileset:
+
+- `img`: (string) relative file path to the image file
+- `data`: (string) the name of a `const uint8_t (* const)[GB_BYTES_PER_TILE]`
+  in your code which will be set to wherever gbromgen puts the converted data.
+- `bank`: (string or integer) If string, the name of a `const uint8_t` in your
+  code which will be set to the bank number into which gbromgen puts your
+  converted data. If integer, this forces gbromgen to assign this tileset to
+  that bank number. If the bank number is 0 or more than the number of banks,
+  it will be skipped entirely.
+
+Your spec definition might look something like this:
+
+``` json
+{
+    ...
+
+    "tilesets": [
+        {
+            "img": "normal-tiles.png",
+            "data": "NORMAL_TILES",
+            "bank": 1
+        },
+        {
+            "img": "dark-tiles.png",
+            "data": "DARK_TILES",
+            "bank": "DARK_TILES_BANK"
+        }
+    ]
+}
+```
+
+In your code, you might put placeholders as such:
+
+``` c
+const uint8_t (* const NORMAL_TILES)[GB_BYTES_PER_TILE] = NULL;
+const uint8_t (* const DARK_TILES)[GB_BYTES_PER_TILE] = NULL;
+const uint8_t NORMAL_TILES_BANK = 1;
+const uint8_t DARK_TILES_BANK = 0;
+```
