@@ -1,7 +1,7 @@
 CC=sdcc -mgbz80
 AR=ar
 
-COMPILE=$(CC) $(CFLAGS) -Iinclude -c
+COMPILE=$(CC) $(CFLAGS) -c
 
 all: lib
 
