@@ -78,9 +78,9 @@ class Tileset:
                 for j in range(0, 8 * 3, 3):
                     color = map_palette(blob[(i + j) + ((8 * 3) * tile)])
 
-                    if color & 0x02:
-                        byte1 |= bit
                     if color & 0x01:
+                        byte1 |= bit
+                    if color & 0x02:
                         byte2 |= bit
 
                     bit >>= 1
