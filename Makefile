@@ -1,4 +1,4 @@
-CC=sdcc -mgbz80
+CC=sdcc --opt-code-size -mgbz80
 AR=ar
 
 COMPILE=$(CC) $(CFLAGS) -c
