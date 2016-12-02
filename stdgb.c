@@ -24,7 +24,11 @@ static uint8_t * const BTN_STATE = (void *) 0xDFA1;
 void
 gb_mbc5_select_rombank (uint16_t bank)
 {
-  *((uint16_t *) 0x2FFF) = bank;
+  uint8_t upper = (bank & 0xFF00) >> 8;
+  uint8_t lower = bank & 0x00FF;
+
+  *((uint8_t *) 0x3000) = upper;
+  *((uint8_t *) 0x2000) = lower;
 }
 
 static void
