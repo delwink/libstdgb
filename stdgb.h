@@ -1,7 +1,7 @@
 /*
  *  libstdgb - library of useful Game Boy operations
- *  Copyright (C) 2016 Delwink, LLC
- *  
+ *  Copyright (C) 2016-2017 Delwink, LLC
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as published by
  *  the Free Software Foundation, version 3 only.
@@ -106,13 +106,13 @@
 #define GB_BTN_A      (0x01)
 
 void
-gb_update_input_state (void);
+gb_update_input_state(void);
 
 uint8_t
-gb_dpad_down (uint8_t direction);
+gb_dpad_down(uint8_t direction);
 
 uint8_t
-gb_button_down (uint8_t button);
+gb_button_down(uint8_t button);
 
 /* MBC1 controls */
 
@@ -124,14 +124,14 @@ gb_button_down (uint8_t button);
 /* MBC5 controls */
 
 void
-gb_mbc5_select_rombank (uint16_t bank);
+gb_mbc5_select_rombank(uint16_t bank);
 
 /* generic controls */
 
-#define gb_disable_interrupts() __asm__ ("di");
-#define gb_enable_interrupts() __asm__ ("ei");
-#define gb_halt() __asm__ ("halt\n\tnop");
-#define gb_stop() __asm__ ("stop");
+#define gb_disable_interrupts() __asm__("di");
+#define gb_enable_interrupts() __asm__("ei");
+#define gb_halt() __asm__("halt\n\tnop");
+#define gb_stop() __asm__("stop");
 
 #define gb_enable_rambank() *((uint8_t *) 0x0000) = 0x0A;
 #define gb_disable_rambank() *((uint8_t *) 0x0000) = 0x00;
@@ -198,23 +198,23 @@ gb_mbc5_select_rombank (uint16_t bank);
 #define GB_OBJ_PAL1  (0x10)
 
 void
-gb_set_view (uint8_t x, uint8_t y);
+gb_set_view(uint8_t x, uint8_t y);
 
 void
-gb_shift_view (int8_t x, int8_t y);
+gb_shift_view(int8_t x, int8_t y);
 
 #define gb_have_vblank() ((*GB_LCD_STATE & 0x03) == 1)
 
 void
-gb_enable_vblank (void);
+gb_enable_vblank(void);
 
 void
-gb_wait_vblank (void);
+gb_wait_vblank(void);
 
 #define GB_BYTES_PER_TILE (16)
 
 void
-gb_define_tile (uint8_t i, const uint8_t *tile_data);
+gb_define_tile(uint8_t i, const uint8_t *tile_data);
 
 #define gb_set_lcd_mode(M) *GB_LCD = (M);
 
@@ -225,21 +225,21 @@ gb_define_tile (uint8_t i, const uint8_t *tile_data);
 
 #define GB_NUM_OBJECTS (40)
 enum _gb_sprite_model
-  {
-    GB_OBJ_YPOS = 0,
-    GB_OBJ_XPOS,
-    GB_OBJ_TILE,
-    GB_OBJ_FLAGS,
-    GB_BYTES_PER_OBJ
-  };
+{
+	GB_OBJ_YPOS = 0,
+	GB_OBJ_XPOS,
+	GB_OBJ_TILE,
+	GB_OBJ_FLAGS,
+	GB_BYTES_PER_OBJ
+};
 
 extern uint8_t (* const GB_OBJECTS)[GB_BYTES_PER_OBJ];
 
 void
-gb_init_objects (void);
+gb_init_objects(void);
 
 void
-gb_update_objects (void);
+gb_update_objects(void);
 
 #define gb_set_object_palette(I,P) GB_OBJ_PALETTES[(I)] = (P);
 
@@ -277,6 +277,6 @@ gb_update_objects (void);
 /* generic functions */
 
 void
-gb_memcpy (uint8_t *dest, const uint8_t *src, uint8_t n);
+gb_memcpy(uint8_t *dest, const uint8_t *src, uint8_t n);
 
 #endif
